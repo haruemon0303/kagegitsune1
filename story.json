@@ -668,19 +668,19 @@
       "choices": [
         {
           "label": "すぐに廊下を確認する",
-          "nextScene": "route_a1_end"
+          "nextScene": "route_a1_continuation"
         },
         {
           "label": "山岡に目配せして、挟み撃ちにする",
-          "nextScene": "route_a2_end"
+          "nextScene": "route_a2_continuation"
         },
         {
           "label": "気づかないふりをして、相手を油断させる",
-          "nextScene": "route_a3_stub"
+          "nextScene": "route_a3_implementation"
         }
       ]
     },
-    "route_a1_end": {
+    "route_a1_continuation": {
       "background": "dark_room",
       "bgm": "mysterious",
       "text": [
@@ -713,20 +713,117 @@
           "text": "山岡「誰かが、俺たちを監視している」"
         },
         {
+          "type": "narration",
+          "text": "その時、廊下の隅に何かが落ちているのに気づいた。"
+        },
+        {
           "type": "system",
-          "text": "【ここまで実装】"
+          "text": "[SE: 拾う音]",
+          "se": "footsteps_snow"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「山岡、これを見てくれ」"
         },
         {
           "type": "narration",
-          "text": "物語はまだ続く――。"
+          "text": "それは布の断片だった。赤い布地に、金色の刺繍が施されている。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「これは」"
         },
         {
           "type": "narration",
-          "text": "カゲギツネの正体は？犯人は誰なのか？"
+          "text": "彼は布を手に取り、じっくりと眺めた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「誰かの服の一部だな。高級そうな生地だ」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「宿泊客の誰かの？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「おそらく。だが、誰のかは分からない」"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "彼は布をポケットにしまった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「明日、みんなの服装を確認しよう。この布に該当する服を着ている人物が、犯人の可能性が高い」"
+        },
+        {
+          "type": "narration",
+          "text": "私は頷いた。ようやく、手がかりを掴んだ気がした。"
+        },
+        {
+          "type": "system",
+          "text": "―翌朝―"
+        },
+        {
+          "type": "narration",
+          "text": "朝食の席で、私たちは宿泊客たちの服装を注意深く観察した。"
+        },
+        {
+          "type": "narration",
+          "text": "神崎玲子は白い医師用のジャケット。小林健太はカジュアルなパーカー。大森教授は地味なセーター。真壁沙織は派手なドレス。"
+        },
+        {
+          "type": "narration",
+          "text": "そして、鷹野美雪。"
+        },
+        {
+          "type": "narration",
+          "text": "彼女が着ているカーディガンの裾に、何かが引っかかったような跡がある。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「主人公名」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が小声で私に呼びかけた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「見たか？　美雪さんの服」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「ああ。あれは」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「昨夜拾った布と、同じ生地だ」"
+        },
+        {
+          "type": "narration",
+          "text": "私の心臓が早鐘を打った。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪が、犯人なのか？"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「だが、まだ確証はない。もう少し調べよう」"
+        },
+        {
+          "type": "narration",
+          "text": "その日の夜、私たちは再び集まった。"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐はさらに開発中です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。物語はシーン10へと続いていく――。"
         },
         {
           "type": "system",
@@ -734,7 +831,7 @@
         }
       ]
     },
-    "route_a2_end": {
+    "route_a2_continuation": {
       "background": "dark_room",
       "bgm": "tense",
       "text": [
@@ -798,30 +895,24 @@
         {
           "type": "dialogue",
           "text": "山岡「どう思う？」"
+        }
+      ],
+      "choices": [
+        {
+          "label": "怪しいな、彼が犯人かもしれない",
+          "nextScene": "chapter3_scene8"
         },
         {
-          "type": "system",
-          "text": "【ここまで実装】"
+          "label": "いや、彼は違う気がする",
+          "nextScene": "chapter3_scene8"
         },
         {
-          "type": "narration",
-          "text": "小林健太は怪しいのか？それとも別の誰かが犯人なのか？"
-        },
-        {
-          "type": "narration",
-          "text": "謎は深まるばかりだ――。"
-        },
-        {
-          "type": "narration",
-          "text": "続きは今後追加予定です。"
-        },
-        {
-          "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "label": "まだ判断できない、もっと情報が必要だ",
+          "nextScene": "chapter3_scene8"
         }
       ]
     },
-    "route_a3_stub": {
+    "route_a3_implementation": {
       "background": "dark_room",
       "bgm": "mysterious",
       "text": [
@@ -838,12 +929,233 @@
           "text": "相手を油断させる作戦だ。"
         },
         {
-          "type": "system",
-          "text": "【この分岐は未実装です】"
+          "type": "dialogue",
+          "text": "山岡「それにしても、妙だな」"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "山岡は、わざと大きな声で話し続けた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「このダイイングメッセージの意味が分からない」"
+        },
+        {
+          "type": "narration",
+          "text": "私も演技を続けた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「カゲギツネか。伝承の妖怪だな」"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 足音が遠ざかる]",
+          "se": "footsteps_snow"
+        },
+        {
+          "type": "narration",
+          "text": "微かな足音が、遠ざかっていく。"
+        },
+        {
+          "type": "narration",
+          "text": "相手は気づいていないようだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「よし」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が小声で言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「追うぞ」"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは音を立てずに、廊下へ出た。"
+        },
+        {
+          "type": "narration",
+          "text": "暗闇の中、人影が階段を降りていく。"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは慎重に後を追った。"
+        },
+        {
+          "type": "narration",
+          "text": "人影は一階のロビーを抜け、奥の扉へと消えた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「あれは？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「地下室への扉だ」"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは扉の前で立ち止まった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「中に入るか？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「ああ」"
+        },
+        {
+          "type": "narration",
+          "text": "扉をゆっくりと開けると、暗い階段が続いていた。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: きしむ音]",
+          "se": "footsteps_snow",
+          "effect": "shake"
+        },
+        {
+          "type": "narration",
+          "text": "階段を降りていく。湿った空気と、古い木の匂いが鼻をついた。"
+        },
+        {
+          "type": "narration",
+          "text": "地下室は広く、薄暗かった。"
+        },
+        {
+          "type": "narration",
+          "text": "その中央に、一つの祭壇があった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「これは」"
+        },
+        {
+          "type": "narration",
+          "text": "祭壇には、古い写真が飾られている。若い女性の写真だ。"
+        },
+        {
+          "type": "narration",
+          "text": "そして、その前にろうそくが灯されていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「誰かの供養をしているのか」"
+        },
+        {
+          "type": "narration",
+          "text": "その時。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ドアが閉まる音]",
+          "se": "door_close",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "背後で扉が閉まった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "？？？「ここまで来るとは思わなかった」"
+        },
+        {
+          "type": "narration",
+          "text": "振り返ると、氷室支配人が立っていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「見てしまったからには、話すしかありませんね」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何を企んでいるんだ」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「企み？　いいえ、これは復讐です」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は写真を指差した。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「二十年前、私の妻は殺されました。犯人は、鷹野誠一」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「では、あなたが」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「いいえ。実行したのは、娘の美雪です」"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは息を呑んだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「彼女は母の仇を討つために、誠一に近づき、結婚した。そして、この館に誘い込んだのです」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「なぜ、そんなことを」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「なぜ？　あなたには、愛する人を失った悲しみが分かりますか？」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の目には、深い悲しみと憎しみが宿っていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「復讐では、何も解決しない」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「それは、復讐をしたことのない者の言葉だ」"
+        },
+        {
+          "type": "narration",
+          "text": "重い沈黙が流れた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「明日、警察が来るでしょう。美雪は全てを自白します」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「ですが、今夜だけは、妻の前で静かに祈らせてください」"
+        },
+        {
+          "type": "narration",
+          "text": "彼はそう言うと、祭壇の前に跪いた。"
+        },
+        {
+          "type": "narration",
+          "text": "私と山岡は、何も言えなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "ただ、復讐という悲しい連鎖を、目の当たりにするだけだった。"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐はさらに開発中です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。物語はシーン12へと続いていく――。"
         },
         {
           "type": "system",
@@ -912,6 +1224,915 @@
         {
           "type": "system",
           "text": "【この分岐は未実装です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "chapter3_scene8": {
+      "background": "dark_room",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "system",
+          "text": "【第三章　深まる謎】"
+        },
+        {
+          "type": "system",
+          "text": "シーン８　深夜の告白"
+        },
+        {
+          "type": "narration",
+          "text": "それから数時間が経った。時計の針は午前二時を指している。"
+        },
+        {
+          "type": "narration",
+          "text": "私は自分の部屋で、今日の出来事を整理していた。"
+        },
+        {
+          "type": "narration",
+          "text": "カゲギツネというダイイングメッセージ。窓から逃げなかった犯人。そして小林健太の不審な行動。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ノックの音]",
+          "se": "heartbeat"
+        },
+        {
+          "type": "narration",
+          "text": "ドアがノックされた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「誰だ？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「鷹野です。少し、お話しできませんか」"
+        },
+        {
+          "type": "narration",
+          "text": "鷹野美雪だった。ドアを開けると、彼女は泣き腫らした目で立っていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「すみません、こんな時間に」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「いえ、どうぞ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は部屋に入り、椅子に座った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「実は、あなたに伝えなければならないことがあるんです」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女の声は震えていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「夫は、実は何かに脅されていました」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「脅されていた？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「ええ。一週間前から、奇妙な手紙が届いていたんです」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女はハンドバッグから、一通の手紙を取り出した。"
+        },
+        {
+          "type": "system",
+          "text": "『お前の秘密は知っている。氷室館で全てを清算しろ――カゲギツネ』",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "カゲギツネ。またあの言葉だ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「これは」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「夫は、何か後ろめたいことがあったんです。それが何なのか、私にも分からない」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は俯いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「でも、私も同じなんです」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「え？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「私も、隠していることがあります」"
+        },
+        {
+          "type": "narration",
+          "text": "その言葉に、背筋が凍った。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "あなた、何か隠していませんか？",
+          "nextScene": "route_b_scene1"
+        },
+        {
+          "label": "無理に話さなくてもいいですよ",
+          "nextScene": "chapter3_scene9_stub"
+        },
+        {
+          "label": "それは事件と関係がありますか？",
+          "nextScene": "chapter3_scene9_stub"
+        }
+      ]
+    },
+    "chapter3_scene9_stub": {
+      "background": "dark_room",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "narration",
+          "text": "美雪は何かを話そうとしたが、結局口を閉ざした。"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐は未実装です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "route_b_scene1": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B　美雪を疑う】"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「あなた、何か隠していませんか？」"
+        },
+        {
+          "type": "narration",
+          "text": "私の問いかけに、美雪の表情が変わった。"
+        },
+        {
+          "type": "narration",
+          "text": "それまでの悲しげな雰囲気が消え、冷たい目が私を見据えた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「……気づいていたんですね」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女の声は、まるで別人のように低く、冷たかった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「あなたは一体」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「ふふ。もう少しで、完璧だったのに」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は立ち上がり、ドアへと向かった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「でも、まだ終わりじゃない。あなたも、気をつけた方がいいわよ」"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ドアが閉まる音]",
+          "se": "door_close",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "彼女はそう言い残して、部屋を出て行った。"
+        },
+        {
+          "type": "narration",
+          "text": "私は呆然と立ち尽くした。美雪は犯人なのか？　それとも別の何かを隠しているのか？"
+        }
+      ],
+      "choices": [
+        {
+          "label": "今すぐ追う",
+          "nextScene": "route_b2_scene1"
+        },
+        {
+          "label": "様子を見る",
+          "nextScene": "route_b3_scene1"
+        },
+        {
+          "label": "他の宿泊客に聞き込みをする",
+          "nextScene": "route_b_info_gathering"
+        }
+      ]
+    },
+    "route_b2_scene1": {
+      "background": "mansion",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B-2　追跡】"
+        },
+        {
+          "type": "narration",
+          "text": "私は急いで部屋を飛び出した。"
+        },
+        {
+          "type": "narration",
+          "text": "廊下の先に、美雪の姿が見えた。彼女は一階へと降りていく。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 足音]",
+          "se": "footsteps_snow"
+        },
+        {
+          "type": "narration",
+          "text": "私は静かに後を追った。"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は暗いロビーを抜け、奥の扉へと向かっている。あれは、支配人の私室への扉だ。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪は扉を開け、中へ入った。"
+        },
+        {
+          "type": "narration",
+          "text": "私は扉の隙間から中を覗いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「父さん」"
+        },
+        {
+          "type": "narration",
+          "text": "父さん？"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「美雪。どうした」"
+        },
+        {
+          "type": "narration",
+          "text": "支配人の氷室源三郎が、そこにいた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「主人公名に、疑われているみたい」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「そうか。厄介だな」"
+        },
+        {
+          "type": "narration",
+          "text": "私は息を呑んだ。美雪と氷室は、親子だったのか。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「計画を早めるしかない」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「でも」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「仕方ない。明日の夜、全員を集めて真実を明かそう」"
+        },
+        {
+          "type": "narration",
+          "text": "真実？　一体何を企んでいるんだ。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "今すぐ山岡に知らせる",
+          "nextScene": "route_b2_1_yamaoka"
+        },
+        {
+          "label": "もう少し盗み聞きする",
+          "nextScene": "route_b2_2_listen"
+        }
+      ]
+    },
+    "route_b2_1_yamaoka": {
+      "background": "mansion",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B-2-1　山岡に報告】"
+        },
+        {
+          "type": "narration",
+          "text": "私は急いで山岡の部屋へ向かった。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ノック]",
+          "se": "heartbeat"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「山岡、起きてるか」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「主人公名？　どうした」"
+        },
+        {
+          "type": "narration",
+          "text": "ドアが開き、寝間着姿の山岡が顔を出した。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「大変なことが分かった。美雪と氷室支配人は親子だった」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「何？」"
+        },
+        {
+          "type": "narration",
+          "text": "私は盗み聞きした内容を全て伝えた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「なるほど。つまり、二人は何か企んでいる」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「ああ。明日の夜、真実を明かすと言っていた」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「待て。これは罠かもしれない」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は眉をひそめた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「俺たちを集めて、一網打尽にするつもりじゃないか？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「じゃあ、どうする」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「明日の夜まで、警戒を続けよう。そして真実が明かされる時、それが罠なら即座に対応する」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡の表情は真剣だった。"
+        },
+        {
+          "type": "narration",
+          "text": "そして翌日の夜。"
+        },
+        {
+          "type": "narration",
+          "text": "全員がロビーに集められた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「皆様、お集まりいただきありがとうございます」"
+        },
+        {
+          "type": "narration",
+          "text": "氷室支配人が、厳かに語り始めた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「実は、この事件には深い因縁があります」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「二十年前、この館で起きた悲劇。それが全ての始まりでした」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は語った。二十年前、この館の当時の主人が殺害された事件のことを。"
+        },
+        {
+          "type": "narration",
+          "text": "その事件は未解決のまま、犯人は捕まっていない。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「その被害者は、私の母でした」"
+        },
+        {
+          "type": "narration",
+          "text": "美雪が涙を流しながら言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「そして犯人は、この中にいる」"
+        },
+        {
+          "type": "narration",
+          "text": "ざわめきが広がった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "大森「待ってくれ。我々が犯人だと？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「いいえ。犯人は、鷹野誠一でした」"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 衝撃音]",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "全員が息を呑んだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「夫は、二十年前にこの館で働いていた使用人でした。そして母を殺害した」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「私は復讐のために、彼に近づき、結婚したんです」"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「では、鷹野誠一を殺したのは」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「私です」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は静かに言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「母の仇を討ちました。これで、全てが終わったんです」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が前に出た。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「待ってください」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「あなたの気持ちは分かります。でも、復讐は何も解決しない」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「分かっています。でも、私にはこれしかできなかった」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は泣き崩れた。"
+        },
+        {
+          "type": "narration",
+          "text": "その後、吹雪が止み、警察が到着した。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪は逮捕された。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、彼女の表情には、どこか安堵の色が浮かんでいた。"
+        },
+        {
+          "type": "system",
+          "text": "【NORMAL END　償いの涙】",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "復讐は果たされた。だが、それは新たな悲劇を生んだだけだった。"
+        },
+        {
+          "type": "narration",
+          "text": "氷室館の長い夜は、こうして幕を閉じた。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
+        }
+      ]
+    },
+    "route_b2_2_listen": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B-2-2　盗み聞き】"
+        },
+        {
+          "type": "narration",
+          "text": "私はもう少し盗み聞きすることにした。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「美雪、お前は本当にこれでいいのか」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「ええ。母の仇は討った。もう思い残すことはありません」"
+        },
+        {
+          "type": "narration",
+          "text": "仇？　美雪が誠一を殺したのか。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「だが、お前は罪に問われる」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「覚悟の上です」"
+        },
+        {
+          "type": "narration",
+          "text": "その時。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 床がきしむ音]",
+          "se": "footsteps_snow",
+          "effect": "shake"
+        },
+        {
+          "type": "narration",
+          "text": "私の足元で、床がきしんだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「誰！」"
+        },
+        {
+          "type": "narration",
+          "text": "扉が勢いよく開かれた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「主人公名さん」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女の目が、冷たく光った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「聞いてしまったんですね」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「待ってくれ、俺は」"
+        },
+        {
+          "type": "narration",
+          "text": "その瞬間、視界が暗くなった。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 鈍い音]",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "後頭部に強い衝撃。"
+        },
+        {
+          "type": "narration",
+          "text": "私の意識は、そこで途切れた。"
+        },
+        {
+          "type": "system",
+          "text": "―――"
+        },
+        {
+          "type": "narration",
+          "text": "気がつくと、私は真っ暗な部屋にいた。"
+        },
+        {
+          "type": "narration",
+          "text": "手足は縛られ、身動きが取れない。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「くそ」"
+        },
+        {
+          "type": "narration",
+          "text": "どれくらい時間が経ったのか分からない。"
+        },
+        {
+          "type": "narration",
+          "text": "やがて、扉が開いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「ごめんなさい」"
+        },
+        {
+          "type": "narration",
+          "text": "美雪が、泣きながら現れた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「あなたを巻き込むつもりはなかったのに」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何をするつもりだ」"
+        },
+        {
+          "type": "dialogue",
+          "text": "美雪「警察が来るまで、ここにいてもらいます」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女はそう言うと、再び扉を閉めた。"
+        },
+        {
+          "type": "narration",
+          "text": "そして数日後。"
+        },
+        {
+          "type": "narration",
+          "text": "吹雪が止み、警察が到着した時、私は解放された。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪は自首し、全てを告白したという。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、私は真実を知りながら、何もできなかった。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END 1　無力な傍観者】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "私は事件を止めることができなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "ただ見ているだけの、無力な傍観者だった。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
+        }
+      ]
+    },
+    "route_b3_scene1": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B-3　様子見】"
+        },
+        {
+          "type": "narration",
+          "text": "私は様子を見ることにした。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪が何か企んでいるのは確かだが、今すぐ動くのは危険かもしれない。"
+        },
+        {
+          "type": "narration",
+          "text": "しばらく待とう。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、それは間違いだった。"
+        },
+        {
+          "type": "system",
+          "text": "―翌朝―"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 悲鳴]",
+          "se": "scream",
+          "effect": "flash"
+        },
+        {
+          "type": "dialogue",
+          "text": "誰か「きゃああああっ」"
+        },
+        {
+          "type": "narration",
+          "text": "悲鳴で目が覚めた。"
+        },
+        {
+          "type": "narration",
+          "text": "私は急いで部屋を飛び出した。"
+        },
+        {
+          "type": "narration",
+          "text": "廊下には、人々が集まっていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何があった」"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「山岡さんが」"
+        },
+        {
+          "type": "narration",
+          "text": "嫌な予感がした。"
+        },
+        {
+          "type": "narration",
+          "text": "部屋の中を覗くと。"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が、血を流して倒れていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「山岡！」"
+        },
+        {
+          "type": "narration",
+          "text": "私は駆け寄ったが、彼はもう息をしていなかった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「即死です」"
+        },
+        {
+          "type": "narration",
+          "text": "神崎玲子が、冷静に診断した。"
+        },
+        {
+          "type": "narration",
+          "text": "私は呆然と立ち尽くした。"
+        },
+        {
+          "type": "narration",
+          "text": "もし昨夜、すぐに動いていれば。"
+        },
+        {
+          "type": "narration",
+          "text": "もし美雪を追っていれば。"
+        },
+        {
+          "type": "narration",
+          "text": "山岡は死ななかったのではないか。"
+        },
+        {
+          "type": "narration",
+          "text": "後悔が、胸を締め付けた。"
+        },
+        {
+          "type": "narration",
+          "text": "その後、警察が到着し、捜査が始まった。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、犯人は見つからなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪も、氷室支配人も、何も語らなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "真実は闇の中。"
+        },
+        {
+          "type": "narration",
+          "text": "私は、親友を失った。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END 2　遅すぎた決断】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "様子を見ている間に、全てが終わってしまった。"
+        },
+        {
+          "type": "narration",
+          "text": "私の優柔不断が、親友の命を奪ったのだ。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
+        }
+      ]
+    },
+    "route_b_info_gathering": {
+      "background": "mansion",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "narration",
+          "text": "私は他の宿泊客に聞き込みをすることにした。"
+        },
+        {
+          "type": "narration",
+          "text": "まず神崎玲子に話を聞いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「美雪さんですか？　あまり話したことはありませんが、どこか影のある方でしたね」"
+        },
+        {
+          "type": "narration",
+          "text": "次に大森教授に聞いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "大森「氷室館の歴史について調べていたら、二十年前にこの館で殺人事件があったと知りました」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「殺人事件？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "大森「ええ。当時の館の主人が殺害されたそうです。未解決のままですが」"
+        },
+        {
+          "type": "narration",
+          "text": "その言葉が、頭の中で繋がった。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪と氷室の関係。カゲギツネというメッセージ。そして二十年前の事件。"
+        },
+        {
+          "type": "narration",
+          "text": "全てが、一つの物語を語り始めた。"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐はさらに開発中です】"
         },
         {
           "type": "narration",

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="mansionBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0a0a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="800" height="600" fill="url(#mansionBg)"/>
+
+  <!-- 屋敷の外壁 -->
+  <rect x="100" y="300" width="600" height="300" fill="#2a1a1a" opacity="0.9"/>
+
+  <!-- 窓 -->
+  <rect x="200" y="350" width="80" height="120" fill="#4a2a1a" stroke="#8a6a5a" stroke-width="3"/>
+  <rect x="350" y="350" width="80" height="120" fill="#4a2a1a" stroke="#8a6a5a" stroke-width="3"/>
+  <rect x="500" y="350" width="80" height="120" fill="#4a2a1a" stroke="#8a6a5a" stroke-width="3"/>
+
+  <!-- ドア -->
+  <rect x="360" y="470" width="80" height="130" fill="#3a2a1a" stroke="#6a5a4a" stroke-width="4"/>
+  <circle cx="420" cy="540" r="5" fill="#8a7a6a"/>
+
+  <!-- 屋根 -->
+  <polygon points="50,300 400,200 750,300" fill="#2a1a1a" opacity="0.95"/>
+
+  <!-- 月 -->
+  <circle cx="650" cy="150" r="50" fill="#fff8dc" opacity="0.3"/>
+</svg>

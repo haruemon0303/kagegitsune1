@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="darkRoom" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2a2a3a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- 暗い部屋の背景 -->
+  <rect width="800" height="600" fill="url(#darkRoom)"/>
+
+  <!-- 床のライン -->
+  <line x1="0" y1="500" x2="800" y2="500" stroke="#1a1a2a" stroke-width="2" opacity="0.5"/>
+
+  <!-- かすかな光（ドアの隙間） -->
+  <rect x="780" y="200" width="20" height="200" fill="#fff8dc" opacity="0.1"/>
+
+  <!-- 影 -->
+  <ellipse cx="400" cy="500" rx="150" ry="30" fill="#000000" opacity="0.4"/>
+</svg>

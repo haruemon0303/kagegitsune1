@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="forestSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a2a3a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a1a2a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 夜空 -->
+  <rect width="800" height="600" fill="url(#forestSky)"/>
+
+  <!-- 月 -->
+  <circle cx="400" cy="120" r="60" fill="#fff8dc" opacity="0.5"/>
+  <circle cx="400" cy="120" r="80" fill="#fff8dc" opacity="0.1"/>
+
+  <!-- 木のシルエット -->
+  <ellipse cx="100" cy="450" rx="80" ry="150" fill="#0a1a0a" opacity="0.9"/>
+  <rect x="90" y="450" width="20" height="150" fill="#0a0a0a"/>
+
+  <ellipse cx="250" cy="420" rx="100" ry="180" fill="#0a1a0a" opacity="0.9"/>
+  <rect x="235" y="420" width="30" height="180" fill="#0a0a0a"/>
+
+  <ellipse cx="550" cy="440" rx="90" ry="160" fill="#0a1a0a" opacity="0.9"/>
+  <rect x="540" y="440" width="25" height="160" fill="#0a0a0a"/>
+
+  <ellipse cx="700" cy="460" rx="95" ry="140" fill="#0a1a0a" opacity="0.9"/>
+  <rect x="685" y="460" width="30" height="140" fill="#0a0a0a"/>
+
+  <!-- 地面 -->
+  <rect x="0" y="550" width="800" height="50" fill="#0a1a0a" opacity="0.8"/>
+
+  <!-- 霧 -->
+  <ellipse cx="400" cy="500" rx="400" ry="100" fill="#2a3a4a" opacity="0.3"/>
+</svg>

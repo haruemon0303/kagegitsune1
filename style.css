@@ -1,0 +1,467 @@
+/* リセット */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+    overflow: hidden;
+    touch-action: none;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 初回タップオーバーレイ */
+.tap-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.tap-message {
+    text-align: center;
+    color: #fff;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.tap-message h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.tap-message p {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+/* ゲームコンテナ */
+.game-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    overflow: hidden;
+}
+
+/* ヘッダー */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 2px solid rgba(100, 150, 200, 0.3);
+    z-index: 100;
+}
+
+.game-header h1 {
+    font-size: 1.5rem;
+    color: #fff;
+    letter-spacing: 0.3rem;
+    text-shadow: 0 0 10px rgba(100, 150, 200, 0.5);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.icon-btn {
+    background: rgba(100, 150, 200, 0.2);
+    border: 1px solid rgba(100, 150, 200, 0.5);
+    color: #fff;
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.icon-btn:active {
+    background: rgba(100, 150, 200, 0.4);
+    transform: scale(0.95);
+}
+
+/* ステージ（背景＋演出） */
+.stage {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    background: #000;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 1s ease;
+}
+
+.silhouette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+}
+
+.silhouette.show {
+    opacity: 1;
+}
+
+.flash-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flash-overlay.flash {
+    animation: flash 0.5s ease-out;
+}
+
+@keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+.noise-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(255, 255, 255, 0.05) 1px,
+        rgba(0, 0, 0, 0.1) 2px
+    );
+    opacity: 0;
+    pointer-events: none;
+}
+
+.noise-overlay.noise {
+    animation: noise 0.2s steps(10) infinite;
+}
+
+@keyframes noise {
+    0% { transform: translate(0, 0); opacity: 0.3; }
+    25% { transform: translate(-2px, 2px); opacity: 0.4; }
+    50% { transform: translate(2px, -2px); opacity: 0.3; }
+    75% { transform: translate(-2px, -2px); opacity: 0.4; }
+    100% { transform: translate(2px, 2px); opacity: 0.3; }
+}
+
+.stage.shake {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 0); }
+    20%, 40%, 60%, 80% { transform: translate(5px, 0); }
+}
+
+/* テキストボックス */
+.text-box {
+    background: rgba(0, 0, 0, 0.85);
+    border-top: 2px solid rgba(100, 150, 200, 0.5);
+    padding: 1.5rem;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+}
+
+.text-area {
+    flex: 1;
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.text-line {
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.text-narration {
+    color: #e0e0e0;
+}
+
+.text-dialogue {
+    color: #a8d8ff;
+    font-style: italic;
+    padding-left: 1rem;
+    border-left: 3px solid rgba(100, 150, 200, 0.5);
+}
+
+.text-system {
+    color: #ffb088;
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+.text-box-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.text-btn {
+    background: rgba(100, 150, 200, 0.2);
+    border: 1px solid rgba(100, 150, 200, 0.5);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.text-btn:active {
+    background: rgba(100, 150, 200, 0.4);
+}
+
+.text-btn.active {
+    background: rgba(100, 150, 200, 0.5);
+    border-color: rgba(100, 150, 200, 0.8);
+}
+
+/* 選択肢エリア */
+.choices-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.choice-btn {
+    background: linear-gradient(135deg, rgba(100, 150, 200, 0.3), rgba(100, 150, 200, 0.2));
+    border: 2px solid rgba(100, 150, 200, 0.6);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+    transition: all 0.3s;
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.choice-btn:hover {
+    background: linear-gradient(135deg, rgba(100, 150, 200, 0.5), rgba(100, 150, 200, 0.3));
+    border-color: rgba(100, 150, 200, 0.8);
+    transform: translateX(5px);
+}
+
+.choice-btn:active {
+    transform: scale(0.98);
+}
+
+/* パネル */
+.panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeInPanel 0.3s;
+}
+
+@keyframes fadeInPanel {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.panel-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid rgba(100, 150, 200, 0.5);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.panel-content h2 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.8rem;
+    letter-spacing: 0.2rem;
+}
+
+.menu-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(100, 150, 200, 0.3), rgba(100, 150, 200, 0.2));
+    border: 2px solid rgba(100, 150, 200, 0.6);
+    color: #fff;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.menu-btn:active {
+    background: linear-gradient(135deg, rgba(100, 150, 200, 0.5), rgba(100, 150, 200, 0.3));
+    transform: scale(0.98);
+}
+
+/* 設定項目 */
+.setting-item {
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.setting-item input[type="range"] {
+    width: calc(100% - 60px);
+    margin-right: 10px;
+}
+
+.setting-item span {
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+}
+
+.setting-item input[type="checkbox"] {
+    margin-right: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* ログコンテンツ */
+.log-content {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(100, 150, 200, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    max-height: 50vh;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.log-entry {
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .game-header h1 {
+        font-size: 1.2rem;
+        letter-spacing: 0.2rem;
+    }
+
+    .text-area {
+        font-size: 1rem;
+    }
+
+    .panel-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .game-container {
+        max-width: 768px;
+        margin: 0 auto;
+    }
+}
+
+/* スクロールバーのスタイル */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 150, 200, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 150, 200, 0.7);
+}

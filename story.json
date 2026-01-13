@@ -1,0 +1,266 @@
+{
+  "title": "影狐",
+  "startScene": "opening",
+  "backgrounds": {
+    "night_street": "assets/images/bg_night_street.png",
+    "dark_room": "assets/images/bg_dark_room.png",
+    "mansion": "assets/images/bg_mansion.png",
+    "forest": "assets/images/bg_forest.png"
+  },
+  "silhouettes": {
+    "fox_shadow": "assets/images/sil_fox.png",
+    "mysterious_figure": "assets/images/sil_figure.png"
+  },
+  "bgm": {
+    "mysterious": "assets/bgm/mysterious.wav",
+    "tense": "assets/bgm/tense.wav",
+    "sad": "assets/bgm/sad.wav"
+  },
+  "se": {
+    "door_knock": "assets/se/door_knock.wav",
+    "footsteps": "assets/se/footsteps.wav",
+    "wind": "assets/se/wind.wav",
+    "lighter": "assets/se/lighter.wav"
+  },
+  "scenes": {
+    "opening": {
+      "background": "night_street",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "narration",
+          "text": "深夜の街に、冷たい風が吹いている。"
+        },
+        {
+          "type": "narration",
+          "text": "街灯の明かりが、路地の奥まで届かない。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 足音]",
+          "se": "footsteps"
+        },
+        {
+          "type": "narration",
+          "text": "足音が聞こえた。誰かが近づいてくる。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「......こんな時間に、何をしているんだ？」"
+        },
+        {
+          "type": "narration",
+          "text": "振り返ると、そこには影のような人影が立っていた。"
+        },
+        {
+          "type": "narration",
+          "text": "その姿は人のようでいて、どこか獣じみている。",
+          "effect": "noise"
+        },
+        {
+          "type": "dialogue",
+          "text": "「私は影狐。お前を導く者だ」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐——そう名乗った存在が、こちらに手を差し伸べる。"
+        }
+      ],
+      "next": "choice1"
+    },
+    "choice1": {
+      "background": "night_street",
+      "silhouette": "fox_shadow",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "dialogue",
+          "text": "「さあ、選べ。お前の運命を」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐が告げる。目の前には、三つの道が現れた。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "暗い路地を進む",
+          "nextScene": "path_a"
+        },
+        {
+          "label": "光の方へ歩く",
+          "nextScene": "path_b"
+        },
+        {
+          "label": "影狐について行く",
+          "nextScene": "path_c"
+        }
+      ]
+    },
+    "path_a": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "narration",
+          "text": "暗い路地へと足を踏み入れた。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ドアを叩く音]",
+          "se": "door_knock",
+          "effect": "shake"
+        },
+        {
+          "type": "narration",
+          "text": "突然、背後から激しいノック音が響く。"
+        },
+        {
+          "type": "narration",
+          "text": "振り返ると、そこには何もなかった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「......よく来たな」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐の声が、闇の中から聞こえてくる。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「お前は正しい選択をした。この先には、真実が待っている」"
+        },
+        {
+          "type": "narration",
+          "text": "（続く......）"
+        }
+      ]
+    },
+    "path_b": {
+      "background": "mansion",
+      "bgm": "sad",
+      "text": [
+        {
+          "type": "narration",
+          "text": "光の方へと歩き出した。"
+        },
+        {
+          "type": "narration",
+          "text": "しかし、それは罠だった。"
+        },
+        {
+          "type": "system",
+          "text": "[効果: フラッシュ]",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "眩い光が視界を奪う。"
+        },
+        {
+          "type": "narration",
+          "text": "気がつくと、見知らぬ屋敷の中にいた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「愚かな......」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐の声が、遠くから聞こえる。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「光に惑わされた者の末路は、闇だ」"
+        }
+      ],
+      "next": "bad_end"
+    },
+    "path_c": {
+      "background": "forest",
+      "silhouette": "fox_shadow",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "narration",
+          "text": "影狐について行くことにした。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 風の音]",
+          "se": "wind"
+        },
+        {
+          "type": "narration",
+          "text": "風が強くなり、周囲の景色が歪んでいく。"
+        },
+        {
+          "type": "narration",
+          "text": "気がつくと、深い森の中にいた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「ここは境界の森。現実と幻想の狭間だ」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐が振り返り、こちらを見つめる。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「お前は私を信じた。その選択が、お前を救うだろう」"
+        },
+        {
+          "type": "narration",
+          "text": "月明かりの下、影狐の姿が徐々に変化していく。"
+        },
+        {
+          "type": "narration",
+          "text": "（続く......）"
+        }
+      ]
+    },
+    "bad_end": {
+      "background": "dark_room",
+      "bgm": "sad",
+      "text": [
+        {
+          "type": "narration",
+          "text": "扉を開けようとしたが、開かない。",
+          "effect": "shake"
+        },
+        {
+          "type": "narration",
+          "text": "窓もない。出口もない。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ライターの音]",
+          "se": "lighter"
+        },
+        {
+          "type": "narration",
+          "text": "暗闇の中、かすかな光が見えた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "「ここで、永遠に迷うがいい......」"
+        },
+        {
+          "type": "narration",
+          "text": "影狐の声が、遠ざかっていく。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "あなたは闇に飲み込まれた。"
+        }
+      ]
+    }
+  }
+}

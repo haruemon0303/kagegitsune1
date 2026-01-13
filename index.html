@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>影狐 - Sound Novel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 初回タップ用のオーバーレイ（iOS音声制限対応） -->
+    <div id="tapToStart" class="tap-overlay">
+        <div class="tap-message">
+            <h2>影狐</h2>
+            <p>タップしてスタート</p>
+        </div>
+    </div>
+
+    <!-- メイン画面 -->
+    <div id="gameContainer" class="game-container hidden">
+        <!-- ヘッダー -->
+        <header class="game-header">
+            <h1 id="gameTitle">影狐</h1>
+            <div class="header-buttons">
+                <button id="menuBtn" class="icon-btn" title="メニュー">☰</button>
+                <button id="settingsBtn" class="icon-btn" title="設定">⚙</button>
+            </div>
+        </header>
+
+        <!-- 背景＆演出レイヤ -->
+        <div class="stage">
+            <div id="background" class="background"></div>
+            <div id="silhouette" class="silhouette"></div>
+            <div id="flash" class="flash-overlay"></div>
+            <div id="noise" class="noise-overlay"></div>
+        </div>
+
+        <!-- テキスト表示エリア -->
+        <div class="text-box">
+            <div id="textArea" class="text-area"></div>
+            <div id="choicesArea" class="choices-area hidden"></div>
+            <div class="text-box-controls">
+                <button id="logBtn" class="text-btn">ログ</button>
+                <button id="autoBtn" class="text-btn">オート</button>
+                <button id="skipBtn" class="text-btn">スキップ</button>
+            </div>
+        </div>
+
+        <!-- メニューパネル -->
+        <div id="menuPanel" class="panel hidden">
+            <div class="panel-content">
+                <h2>メニュー</h2>
+                <button class="menu-btn" id="saveBtn">セーブ</button>
+                <button class="menu-btn" id="loadBtn">ロード</button>
+                <button class="menu-btn" id="restartBtn">最初から</button>
+                <button class="menu-btn" id="closeMenuBtn">閉じる</button>
+            </div>
+        </div>
+
+        <!-- 設定パネル -->
+        <div id="settingsPanel" class="panel hidden">
+            <div class="panel-content">
+                <h2>設定</h2>
+                <div class="setting-item">
+                    <label>BGM音量</label>
+                    <input type="range" id="bgmVolume" min="0" max="100" value="70">
+                    <span id="bgmVolumeValue">70</span>
+                </div>
+                <div class="setting-item">
+                    <label>SE音量</label>
+                    <input type="range" id="seVolume" min="0" max="100" value="80">
+                    <span id="seVolumeValue">80</span>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="muteBgm"> BGMミュート
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="muteSe"> SEミュート
+                    </label>
+                </div>
+                <button class="menu-btn" id="closeSettingsBtn">閉じる</button>
+            </div>
+        </div>
+
+        <!-- テキストログパネル -->
+        <div id="logPanel" class="panel hidden">
+            <div class="panel-content">
+                <h2>テキストログ</h2>
+                <div id="logContent" class="log-content"></div>
+                <button class="menu-btn" id="closeLogBtn">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

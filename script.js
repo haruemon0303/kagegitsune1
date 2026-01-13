@@ -25,7 +25,8 @@ let settings = {
     bgmVolume: 70,
     seVolume: 80,
     muteBgm: false,
-    muteSe: false
+    muteSe: false,
+    debugMode: false
 };
 
 // ========================================
@@ -90,6 +91,7 @@ function setupEventListeners() {
     document.getElementById('seVolume').addEventListener('input', updateSeVolume);
     document.getElementById('muteBgm').addEventListener('change', toggleMuteBgm);
     document.getElementById('muteSe').addEventListener('change', toggleMuteSe);
+    document.getElementById('debugMode').addEventListener('change', toggleDebugMode);
     document.getElementById('closeSettingsBtn').addEventListener('click', hideSettings);
 
     // ログパネル
@@ -168,6 +170,9 @@ function loadScene(sceneId) {
 
     // 選択肢エリアを非表示
     hideChoices();
+
+    // デバッグ表示を更新
+    updateDebugDisplay();
 
     // テキスト表示を開始
     showNextText();
@@ -517,6 +522,12 @@ function toggleMuteSe(e) {
     settings.muteSe = e.target.checked;
 }
 
+function toggleDebugMode(e) {
+    settings.debugMode = e.target.checked;
+    saveSettings();
+    updateDebugDisplay();
+}
+
 // ========================================
 // セーブ・ロード
 // ========================================
@@ -593,6 +604,27 @@ function loadSettings() {
         } catch (error) {
             console.error('Failed to load settings:', error);
         }
+    }
+
+    // デバッグモードのチェックボックス状態を更新
+    const debugCheckbox = document.getElementById('debugMode');
+    if (debugCheckbox) {
+        debugCheckbox.checked = settings.debugMode || false;
+    }
+}
+
+// ========================================
+// デバッグ表示
+// ========================================
+function updateDebugDisplay() {
+    const debugInfo = document.getElementById('debugInfo');
+    if (!debugInfo) return;
+
+    if (settings.debugMode && currentScene) {
+        debugInfo.textContent = `DEBUG: scene=${currentScene.id}`;
+        debugInfo.classList.remove('hidden');
+    } else {
+        debugInfo.classList.add('hidden');
     }
 }
 

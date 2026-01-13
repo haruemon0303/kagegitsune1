@@ -543,11 +543,11 @@
         },
         {
           "label": "いや、危険すぎる、やめておけ",
-          "nextScene": "route_b_stub"
+          "nextScene": "route_b_refusal"
         },
         {
           "label": "俺は、一人で調べたい",
-          "nextScene": "route_c_stub"
+          "nextScene": "route_c_solo"
         }
       ]
     },
@@ -818,16 +818,45 @@
           "text": "その日の夜、私たちは再び集まった。"
         },
         {
-          "type": "system",
-          "text": "【この分岐はさらに開発中です】"
+          "type": "narration",
+          "text": "その夜、私たちは慎重に調査を続けた。"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。物語はシーン10へと続いていく――。"
+          "text": "美雪の布の断片という決定的な証拠を掴んだ私たちは、翌朝全員を集めて真実を問いただすことにした。"
+        },
+        {
+          "type": "narration",
+          "text": "しかし、事態は思わぬ方向へ進んでいく――。"
+        },
+        {
+          "type": "narration",
+          "text": "結局、私たちは真犯人を特定できないまま、吹雪が止むのを待つしかなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "警察が到着した時、事件は未解決のまま凍結された。"
+        },
+        {
+          "type": "narration",
+          "text": "真実は、氷室館の雪の中に埋もれてしまった。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "【NORMAL END　雪に埋もれた真実】",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは手がかりを掴みながらも、真相に辿り着けなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "カゲギツネの謎は、今も氷室館に残されたままだ。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     },
@@ -1151,19 +1180,56 @@
         },
         {
           "type": "system",
-          "text": "【この分岐はさらに開発中です】"
+          "text": "―翌日―"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。物語はシーン12へと続いていく――。"
+          "text": "氷室支配人と美雪は、警察に全てを自白した。"
+        },
+        {
+          "type": "narration",
+          "text": "二人は、二十年前の未解決事件の真相を明らかにした。"
+        },
+        {
+          "type": "narration",
+          "text": "そして美雪は、夫である鷹野誠一を殺害したことを認めた。"
+        },
+        {
+          "type": "narration",
+          "text": "山岡と私は、証人として事件の詳細を語った。"
+        },
+        {
+          "type": "narration",
+          "text": "復讐は果たされたが、新たな悲劇が生まれた。"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは、正義とは何かを問い続けることになった。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "【TRUE END　復讐の代償】",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "真実を知った私たちは、全てを警察に伝えた。"
+        },
+        {
+          "type": "narration",
+          "text": "氷室館の事件は、こうして幕を閉じた。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、心の傷は簡単には癒えない。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     },
-    "route_b_stub": {
+    "route_b_refusal": {
       "background": "mansion",
       "bgm": "sad",
       "text": [
@@ -1184,20 +1250,63 @@
           "text": "山岡「そうか。まあ、無理強いはしないよ」"
         },
         {
-          "type": "system",
-          "text": "【この分岐は未実装です】"
+          "type": "narration",
+          "text": "それから数日間、私たちは閉じ込められたまま過ごした。"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "山岡は一人で調査を続けていたが、決定的な手がかりは見つからなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "そして、吹雪が止んだ日。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "[SE: サイレン]",
+          "se": "heartbeat",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "警察が到着した。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、真犯人は見つからなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "事件は未解決のまま、私たちは館を後にした。"
+        },
+        {
+          "type": "narration",
+          "text": "もし、あの時協力していれば――。"
+        },
+        {
+          "type": "narration",
+          "text": "そんな後悔が、ずっと胸に残り続けた。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END　協力の拒否】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "私は友を信じず、協力を拒んだ。"
+        },
+        {
+          "type": "narration",
+          "text": "その結果、真実は永遠に闇の中に消えた。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     },
-    "route_c_stub": {
+    "route_c_solo": {
       "background": "mansion",
       "bgm": "tense",
       "text": [
@@ -1222,16 +1331,59 @@
           "text": "主人公名「わかってる。でも、これは自分でやりたいんだ」"
         },
         {
-          "type": "system",
-          "text": "【この分岐は未実装です】"
+          "type": "narration",
+          "text": "山岡は困惑した表情を見せたが、やがて肩をすくめた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「そうか。なら、気をつけろよ」"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "私は一人で調査を始めた。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、単独行動は危険だった。"
+        },
+        {
+          "type": "narration",
+          "text": "その夜、私は廊下で何者かに襲われた。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "[SE: 打撃音]",
+          "se": "struggle",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "激しい痛みとともに、意識が遠のいていく。"
+        },
+        {
+          "type": "narration",
+          "text": "一人では、真実に辿り着けなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "そして私は、カゲギツネの次の犠牲者となった――。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END　孤独な探偵】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "単独行動は命取りだった。"
+        },
+        {
+          "type": "narration",
+          "text": "仲間を信じなかった代償は、あまりにも大きかった。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     },
@@ -1361,15 +1513,15 @@
         },
         {
           "label": "無理に話さなくてもいいですよ",
-          "nextScene": "chapter3_scene9_stub"
+          "nextScene": "chapter3_scene9_alternative"
         },
         {
           "label": "それは事件と関係がありますか？",
-          "nextScene": "chapter3_scene9_stub"
+          "nextScene": "chapter3_scene9_alternative"
         }
       ]
     },
-    "chapter3_scene9_stub": {
+    "chapter3_scene9_alternative": {
       "background": "dark_room",
       "bgm": "mysterious",
       "text": [
@@ -1378,16 +1530,57 @@
           "text": "美雪は何かを話そうとしたが、結局口を閉ざした。"
         },
         {
-          "type": "system",
-          "text": "【この分岐は未実装です】"
+          "type": "dialogue",
+          "text": "美雪「すみません。やはり、今は話せません」"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "彼女はそう言って、部屋を出て行った。"
+        },
+        {
+          "type": "narration",
+          "text": "私は一人、部屋に残された。"
+        },
+        {
+          "type": "narration",
+          "text": "その後、数日が過ぎた。"
+        },
+        {
+          "type": "narration",
+          "text": "吹雪は止んだが、事件の真相は明らかにならなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "警察の捜査も、決定的な証拠を見つけられないまま終わった。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪は何も語らず、館を去った。"
+        },
+        {
+          "type": "narration",
+          "text": "私は、あの時もっと踏み込んで聞くべきだったのだろうか。"
+        },
+        {
+          "type": "narration",
+          "text": "その問いは、今も答えのないまま残っている。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "【NORMAL END　語られない真実】",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "私は美雪の秘密を知ることができなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "真実は、彼女の心の中に封印されたままだ。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     },
@@ -2131,16 +2324,55 @@
           "text": "全てが、一つの物語を語り始めた。"
         },
         {
-          "type": "system",
-          "text": "【この分岐はさらに開発中です】"
+          "type": "narration",
+          "text": "私は急いで山岡に報告しようとした。"
         },
         {
           "type": "narration",
-          "text": "続きは今後追加予定です。"
+          "text": "だが、その時にはもう遅かった。"
         },
         {
           "type": "system",
-          "text": "【TO BE CONTINUED...】"
+          "text": "[SE: 悲鳴]",
+          "se": "scream",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "館の奥から、悲鳴が響いた。"
+        },
+        {
+          "type": "narration",
+          "text": "駆けつけた時、美雪はすでに姿を消していた。"
+        },
+        {
+          "type": "narration",
+          "text": "情報収集に時間をかけすぎた。"
+        },
+        {
+          "type": "narration",
+          "text": "その間に、事態は最悪の方向へ進んでしまった。"
+        },
+        {
+          "type": "narration",
+          "text": "吹雪が止んだ後、警察が到着したが、真相は謎のままだった。"
+        },
+        {
+          "type": "system",
+          "text": "【BAD END　情報収集の果て】",
+          "effect": "noise"
+        },
+        {
+          "type": "narration",
+          "text": "私は真実の断片を掴みながらも、行動が遅れた。"
+        },
+        {
+          "type": "narration",
+          "text": "知識だけでは、事件を防ぐことはできなかった。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
         }
       ]
     }

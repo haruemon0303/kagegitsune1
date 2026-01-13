@@ -465,3 +465,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(100, 150, 200, 0.7);
 }
+
+/* デバッグ情報表示 */
+.debug-info {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #0f0;
+    padding: 5px 10px;
+    border: 1px solid #0f0;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    z-index: 1000;
+    pointer-events: none;
+}

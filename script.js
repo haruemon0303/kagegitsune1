@@ -17,6 +17,9 @@ let currentBgm = null;
 let textLog = [];
 let readScenes = new Set();
 
+// プレイヤー名
+let playerName = '主人公';
+
 // 設定
 let settings = {
     bgmVolume: 70,
@@ -75,8 +78,12 @@ function setupEventListeners() {
     // メニューパネル
     document.getElementById('saveBtn').addEventListener('click', saveGame);
     document.getElementById('loadBtn').addEventListener('click', loadGame);
+    document.getElementById('changeNameBtn').addEventListener('click', showNameInput);
     document.getElementById('restartBtn').addEventListener('click', restartGame);
     document.getElementById('closeMenuBtn').addEventListener('click', hideMenu);
+
+    // 名前入力
+    document.getElementById('confirmNameBtn').addEventListener('click', confirmPlayerName);
 
     // 設定パネル
     document.getElementById('bgmVolume').addEventListener('input', updateBgmVolume);
@@ -96,9 +103,18 @@ function showTapOverlay() {
     const overlay = document.getElementById('tapToStart');
     overlay.addEventListener('click', () => {
         overlay.classList.add('hidden');
-        document.getElementById('gameContainer').classList.remove('hidden');
         enableAudio();
-        startGame();
+
+        // プレイヤー名をロード
+        loadPlayerName();
+
+        // 名前が保存されていない場合は入力パネルを表示
+        if (!localStorage.getItem('soundNovelPlayerName')) {
+            showNameInputPanel();
+        } else {
+            document.getElementById('gameContainer').classList.remove('hidden');
+            startGame();
+        }
     });
 }
 
@@ -226,18 +242,22 @@ function displayText(textData) {
     lineDiv.className = `text-line text-${textData.type || 'narration'}`;
     textArea.appendChild(lineDiv);
 
-    // ログに追加
-    addToLog(textData);
+    // ログに追加（置換後のテキストで）
+    const replacedText = replacePlayerName(textData.text);
+    addToLog({ ...textData, text: replacedText });
 
     // タイプライター表示
     isTyping = true;
-    const text = textData.text;
+    const text = replacedText;
     let charIndex = 0;
 
     const typeInterval = setInterval(() => {
         if (charIndex < text.length) {
             lineDiv.textContent += text[charIndex];
             charIndex++;
+
+            // タイプ中もスクロール追従
+            textArea.scrollTop = textArea.scrollHeight;
         } else {
             clearInterval(typeInterval);
             isTyping = false;
@@ -286,7 +306,7 @@ function showChoices() {
     currentScene.choices.forEach((choice, index) => {
         const button = document.createElement('button');
         button.className = 'choice-btn';
-        button.textContent = choice.label;
+        button.textContent = replacePlayerName(choice.label);
         button.style.animationDelay = `${index * 0.1}s`;
         button.addEventListener('click', () => selectChoice(choice));
         choicesArea.appendChild(button);
@@ -574,4 +594,65 @@ function loadSettings() {
             console.error('Failed to load settings:', error);
         }
     }
+}
+
+// ========================================
+// プレイヤー名の保存・読み込み
+// ========================================
+function savePlayerName() {
+    localStorage.setItem('soundNovelPlayerName', playerName);
+}
+
+function loadPlayerName() {
+    const savedName = localStorage.getItem('soundNovelPlayerName');
+    if (savedName) {
+        playerName = savedName;
+    }
+}
+
+function showNameInputPanel() {
+    const panel = document.getElementById('nameInputPanel');
+    const input = document.getElementById('playerNameInput');
+    input.value = playerName;
+    panel.classList.remove('hidden');
+}
+
+function hideNameInputPanel() {
+    document.getElementById('nameInputPanel').classList.add('hidden');
+}
+
+function confirmPlayerName() {
+    const input = document.getElementById('playerNameInput');
+    const name = input.value.trim();
+
+    if (!name) {
+        alert('名前を入力してください');
+        return;
+    }
+
+    if (name.length > 8) {
+        alert('名前は8文字以内で入力してください');
+        return;
+    }
+
+    playerName = name;
+    savePlayerName();
+    hideNameInputPanel();
+
+    // ゲームコンテナを表示してゲーム開始
+    if (document.getElementById('gameContainer').classList.contains('hidden')) {
+        document.getElementById('gameContainer').classList.remove('hidden');
+        startGame();
+    }
+}
+
+function showNameInput() {
+    hideMenu();
+    showNameInputPanel();
+}
+
+// テキストの置換処理
+function replacePlayerName(text) {
+    if (!text) return text;
+    return text.replace(/主人公名/g, playerName);
 }

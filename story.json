@@ -1,6 +1,6 @@
 {
-  "title": "影狐",
-  "startScene": "opening",
+  "title": "かげぎつねの山",
+  "startScene": "prologue_scene1",
   "backgrounds": {
     "night_street": "assets/images/bg_night_street.png",
     "dark_room": "assets/images/bg_dark_room.png",
@@ -12,253 +12,914 @@
     "mysterious_figure": "assets/images/sil_figure.png"
   },
   "bgm": {
-    "mysterious": "assets/bgm/mysterious.wav",
+    "wind": "assets/bgm/mysterious.wav",
+    "silence": "assets/bgm/tense.wav",
     "tense": "assets/bgm/tense.wav",
+    "mysterious": "assets/bgm/mysterious.wav",
     "sad": "assets/bgm/sad.wav"
   },
   "se": {
-    "door_knock": "assets/se/door_knock.wav",
-    "footsteps": "assets/se/footsteps.wav",
-    "wind": "assets/se/wind.wav",
-    "lighter": "assets/se/lighter.wav"
+    "wiper": "assets/se/wind.wav",
+    "gust": "assets/se/wind.wav",
+    "door_close": "assets/se/door_knock.wav",
+    "footsteps_snow": "assets/se/footsteps.wav",
+    "scream": "assets/se/lighter.wav",
+    "heartbeat": "assets/se/door_knock.wav",
+    "struggle": "assets/se/footsteps.wav"
   },
   "scenes": {
-    "opening": {
+    "prologue_scene1": {
       "background": "night_street",
-      "bgm": "mysterious",
+      "bgm": "wind",
       "text": [
         {
-          "type": "narration",
-          "text": "深夜の街に、冷たい風が吹いている。"
-        },
-        {
-          "type": "narration",
-          "text": "街灯の明かりが、路地の奥まで届かない。"
+          "type": "system",
+          "text": "【プロローグ】"
         },
         {
           "type": "system",
-          "text": "[SE: 足音]",
-          "se": "footsteps"
+          "text": "シーン１　吹雪の峠道"
+        },
+        {
+          "type": "system",
+          "text": "[BGM: 風の唸り、吹雪]"
+        },
+        {
+          "type": "system",
+          "text": "[SE: ワイパーの音、エンジン音]",
+          "se": "wiper"
         },
         {
           "type": "narration",
-          "text": "足音が聞こえた。誰かが近づいてくる。"
+          "text": "白い闇が、フロントガラスを覆い尽くしていた。"
+        },
+        {
+          "type": "narration",
+          "text": "ワイパーが必死に雪を掻き分けるが、視界は数メートル先までしか届かない。"
         },
         {
           "type": "dialogue",
-          "text": "「......こんな時間に、何をしているんだ？」"
+          "text": "山岡「まいったな、こりゃ」"
         },
         {
           "type": "narration",
-          "text": "振り返ると、そこには影のような人影が立っていた。"
-        },
-        {
-          "type": "narration",
-          "text": "その姿は人のようでいて、どこか獣じみている。",
-          "effect": "noise"
+          "text": "助手席で腕を組んだまま、山岡拓也は溜息をついた。芸人らしからぬ端正な顔立ちが、ダッシュボードの明かりにぼんやりと照らされている。"
         },
         {
           "type": "dialogue",
-          "text": "「私は影狐。お前を導く者だ」"
+          "text": "運転手「お客さん、この先の氷室館まで、あと十五分ってとこですかね」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「十五分か。長いな」"
         },
         {
           "type": "narration",
-          "text": "影狐——そう名乗った存在が、こちらに手を差し伸べる。"
+          "text": "私の名前は主人公名という。山岡とは大学時代からの付き合いだ。今回、彼が面白い企画があると言うので、この旅行に同行することになった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「なあ、主人公名。俺、嫌な予感がするんだよ」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「嫌な予感？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「この吹雪。なんか、閉じ込められる気がしてさ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は冗談めかして笑ったが、その目は笑っていなかった。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 突風]",
+          "se": "gust",
+          "effect": "shake"
+        },
+        {
+          "type": "narration",
+          "text": "その瞬間、車が大きく揺れた。",
+          "effect": "shake"
+        },
+        {
+          "type": "dialogue",
+          "text": "運転手「うわっ」"
+        },
+        {
+          "type": "narration",
+          "text": "ハンドルを取られ、タイヤが空転する音がした。数秒後、車は何とか態勢を立て直したが、私の心臓は激しく脈打っていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「な？　言っただろ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の言葉が、妙に不吉に響いた。"
         }
       ],
-      "next": "choice1"
+      "next": "chapter1_scene2"
     },
-    "choice1": {
-      "background": "night_street",
-      "silhouette": "fox_shadow",
+    "chapter1_scene2": {
+      "background": "mansion",
+      "bgm": "silence",
+      "text": [
+        {
+          "type": "system",
+          "text": "【第一章　氷室館の夜】"
+        },
+        {
+          "type": "system",
+          "text": "シーン２　到着"
+        },
+        {
+          "type": "system",
+          "text": "[BGM: 静寂、低音のドローン]"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 車のドアが閉まる音、雪を踏む音]",
+          "se": "door_close"
+        },
+        {
+          "type": "narration",
+          "text": "氷室館。山奥にひっそりと佇む、古びた洋館だった。"
+        },
+        {
+          "type": "narration",
+          "text": "雪明かりの中、その建物は黒い影のようにそびえ立っている。窓からは暖かな光が漏れていたが、どこか不気味な雰囲気が拭えない。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「へえ。いい雰囲気じゃん」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「お前、こういうの好きだもんな」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「ミステリー好きとしては、たまらんね」"
+        },
+        {
+          "type": "narration",
+          "text": "玄関の重い扉を開けると、暖かい空気が頬を撫でた。ロビーには暖炉があり、炎がパチパチと音を立てている。"
+        },
+        {
+          "type": "dialogue",
+          "text": "支配人「いらっしゃいませ。お待ちしておりました」"
+        },
+        {
+          "type": "narration",
+          "text": "黒いスーツを着た初老の男が、丁寧に頭を下げた。支配人の氷室源三郎だという。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「本日お泊まりのお客様は、全部で八名でございます」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「八名か。ちょうどいいな」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何が？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「いや、なんでもない」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は意味深な笑みを浮かべた。"
+        }
+      ],
+      "next": "chapter1_scene3"
+    },
+    "chapter1_scene3": {
+      "background": "mansion",
       "bgm": "mysterious",
       "text": [
         {
-          "type": "dialogue",
-          "text": "「さあ、選べ。お前の運命を」"
+          "type": "system",
+          "text": "シーン３　夕食　宿泊者たちの顔ぶれ"
+        },
+        {
+          "type": "system",
+          "text": "[BGM: 不穏なワルツ]"
         },
         {
           "type": "narration",
-          "text": "影狐が告げる。目の前には、三つの道が現れた。"
+          "text": "食堂には、すでに他の宿泊客が集まっていた。"
+        },
+        {
+          "type": "system",
+          "text": "【登場人物紹介】"
+        },
+        {
+          "type": "narration",
+          "text": "鷹野美雪。二十代後半の美しい女性。どこか影のある表情。フリーライターをしていますと自己紹介した。"
+        },
+        {
+          "type": "narration",
+          "text": "鷹野誠一。美雪の夫。四十代の実業家風の男。妻とは再婚でね、まだ一年も経っていないんだと語った。"
+        },
+        {
+          "type": "narration",
+          "text": "神崎玲子。三十代の女医。冷静で理知的な雰囲気。この近くの診療所に勤めていますと言った。"
+        },
+        {
+          "type": "narration",
+          "text": "大森剛。五十代の大学教授。民俗学が専門だという。この地方の伝承を調べに来ましたと説明した。"
+        },
+        {
+          "type": "narration",
+          "text": "小林健太。二十代前半の大学生。人懐っこい笑顔。卒論の取材っす、よろしくお願いしますと元気よく挨拶した。"
+        },
+        {
+          "type": "narration",
+          "text": "真壁沙織。三十代の女性。派手な服装と化粧。まあ、旅行よ、旅行、深い意味はないわと答えた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「面白いメンバーだな」"
+        },
+        {
+          "type": "narration",
+          "text": "小声で呟いた山岡の目が、鋭く光った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何か気づいたのか？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「いや。まだ、何とも言えない」"
+        },
+        {
+          "type": "narration",
+          "text": "夕食は和やかに進んだ。だが、私はどこか落ち着かなかった。"
+        },
+        {
+          "type": "narration",
+          "text": "それぞれが、何かを隠しているような。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 風の音が強まる]",
+          "se": "gust"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「申し訳ございません。先ほど、麓から連絡がありまして」"
+        },
+        {
+          "type": "narration",
+          "text": "支配人の声に、全員の視線が集まった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「この吹雪で、道が完全に塞がれました。復旧の目処は明後日以降になるとのことです」"
+        },
+        {
+          "type": "narration",
+          "text": "ざわめきが広がった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "鷹野誠一「なんだと。閉じ込められたというのか」"
+        },
+        {
+          "type": "dialogue",
+          "text": "真壁沙織「嘘でしょ。携帯も繋がらないじゃない」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「ほらな」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は私にだけ聞こえる声で、そう言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「言っただろ。閉じ込められるって」"
+        },
+        {
+          "type": "narration",
+          "text": "その言葉が終わるか終わらないかのタイミングで。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 悲鳴]",
+          "se": "scream",
+          "effect": "flash"
+        },
+        {
+          "type": "dialogue",
+          "text": "誰か「きゃあああああっ」"
+        },
+        {
+          "type": "narration",
+          "text": "悲鳴が、館中に響き渡った。"
         }
       ],
-      "choices": [
-        {
-          "label": "暗い路地を進む",
-          "nextScene": "path_a"
-        },
-        {
-          "label": "光の方へ歩く",
-          "nextScene": "path_b"
-        },
-        {
-          "label": "影狐について行く",
-          "nextScene": "path_c"
-        }
-      ]
+      "next": "chapter2_scene4"
     },
-    "path_a": {
+    "chapter2_scene4": {
       "background": "dark_room",
       "bgm": "tense",
       "text": [
         {
-          "type": "narration",
-          "text": "暗い路地へと足を踏み入れた。"
+          "type": "system",
+          "text": "【第二章　最初の犠牲者】"
         },
         {
           "type": "system",
-          "text": "[SE: ドアを叩く音]",
-          "se": "door_knock",
-          "effect": "shake"
-        },
-        {
-          "type": "narration",
-          "text": "突然、背後から激しいノック音が響く。"
-        },
-        {
-          "type": "narration",
-          "text": "振り返ると、そこには何もなかった。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「......よく来たな」"
-        },
-        {
-          "type": "narration",
-          "text": "影狐の声が、闇の中から聞こえてくる。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「お前は正しい選択をした。この先には、真実が待っている」"
-        },
-        {
-          "type": "narration",
-          "text": "（続く......）"
-        }
-      ]
-    },
-    "path_b": {
-      "background": "mansion",
-      "bgm": "sad",
-      "text": [
-        {
-          "type": "narration",
-          "text": "光の方へと歩き出した。"
-        },
-        {
-          "type": "narration",
-          "text": "しかし、それは罠だった。"
+          "text": "シーン４　発見"
         },
         {
           "type": "system",
-          "text": "[効果: フラッシュ]",
+          "text": "[BGM: 緊迫、心臓の鼓動]"
+        },
+        {
+          "type": "narration",
+          "text": "悲鳴の方向へ、全員が走った。"
+        },
+        {
+          "type": "narration",
+          "text": "二階の廊下。その突き当たりで、小林健太が腰を抜かしていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "小林「し、死んでる。死んでるっす」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の視線の先には、開け放たれた扉。その向こうに。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 風の唸り]",
+          "se": "gust"
+        },
+        {
+          "type": "narration",
+          "text": "鷹野誠一が倒れていた。",
           "effect": "flash"
         },
         {
           "type": "narration",
-          "text": "眩い光が視界を奪う。"
-        },
-        {
-          "type": "narration",
-          "text": "気がつくと、見知らぬ屋敷の中にいた。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「愚かな......」"
-        },
-        {
-          "type": "narration",
-          "text": "影狐の声が、遠くから聞こえる。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「光に惑わされた者の末路は、闇だ」"
-        }
-      ],
-      "next": "bad_end"
-    },
-    "path_c": {
-      "background": "forest",
-      "silhouette": "fox_shadow",
-      "bgm": "mysterious",
-      "text": [
-        {
-          "type": "narration",
-          "text": "影狐について行くことにした。"
-        },
-        {
-          "type": "system",
-          "text": "[SE: 風の音]",
-          "se": "wind"
-        },
-        {
-          "type": "narration",
-          "text": "風が強くなり、周囲の景色が歪んでいく。"
-        },
-        {
-          "type": "narration",
-          "text": "気がつくと、深い森の中にいた。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「ここは境界の森。現実と幻想の狭間だ」"
-        },
-        {
-          "type": "narration",
-          "text": "影狐が振り返り、こちらを見つめる。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「お前は私を信じた。その選択が、お前を救うだろう」"
-        },
-        {
-          "type": "narration",
-          "text": "月明かりの下、影狐の姿が徐々に変化していく。"
-        },
-        {
-          "type": "narration",
-          "text": "（続く......）"
-        }
-      ]
-    },
-    "bad_end": {
-      "background": "dark_room",
-      "bgm": "sad",
-      "text": [
-        {
-          "type": "narration",
-          "text": "扉を開けようとしたが、開かない。",
-          "effect": "shake"
-        },
-        {
-          "type": "narration",
-          "text": "窓もない。出口もない。"
-        },
-        {
-          "type": "system",
-          "text": "[SE: ライターの音]",
-          "se": "lighter"
-        },
-        {
-          "type": "narration",
-          "text": "暗闇の中、かすかな光が見えた。"
-        },
-        {
-          "type": "dialogue",
-          "text": "「ここで、永遠に迷うがいい......」"
-        },
-        {
-          "type": "narration",
-          "text": "影狐の声が、遠ざかっていく。"
-        },
-        {
-          "type": "system",
-          "text": "【BAD END】",
+          "text": "背中から大量の血を流し、ピクリとも動かない。",
           "effect": "noise"
         },
         {
+          "type": "dialogue",
+          "text": "鷹野美雪「あなた。あなたっ」"
+        },
+        {
           "type": "narration",
-          "text": "あなたは闇に飲み込まれた。"
+          "text": "美雪が駆け寄ろうとするのを、神崎玲子が制した。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「待って。現場を荒らさないで」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女は冷静に誠一の脈を確認し、ゆっくりと首を横に振った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「亡くなっています。即死でしょう」"
+        },
+        {
+          "type": "dialogue",
+          "text": "大森「そんな。殺人か」"
+        },
+        {
+          "type": "dialogue",
+          "text": "真壁沙織「いやよ。なんでこんなことに」"
+        },
+        {
+          "type": "narration",
+          "text": "混乱の中、私は山岡の方を見た。"
+        },
+        {
+          "type": "narration",
+          "text": "彼は表情一つ変えず、部屋の中を観察していた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「山岡」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「主人公名。よく見ろ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は静かに言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「窓が開いてる」"
+        },
+        {
+          "type": "narration",
+          "text": "確かに、部屋の窓は開け放たれ、吹雪が舞い込んでいる。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「だが、雪の中に足跡はない」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「つまり、犯人は窓から逃げたわけじゃない？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「そういうことだ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の目が、鋭く光った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「犯人はこの中にいる」"
+        }
+      ],
+      "next": "chapter2_scene5"
+    },
+    "chapter2_scene5": {
+      "background": "mansion",
+      "bgm": "silence",
+      "text": [
+        {
+          "type": "system",
+          "text": "シーン５　選択"
+        },
+        {
+          "type": "system",
+          "text": "[BGM: 沈黙]"
+        },
+        {
+          "type": "narration",
+          "text": "全員がロビーに集められた。暖炉の炎が、それぞれの顔を不気味に照らしている。"
+        },
+        {
+          "type": "dialogue",
+          "text": "大森「警察に連絡できないのか」"
+        },
+        {
+          "type": "dialogue",
+          "text": "氷室「申し訳ございません。電話線も、この吹雪で」"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「つまり、私たちは閉じ込められたまま、犯人と一緒にいるということね」"
+        },
+        {
+          "type": "narration",
+          "text": "沈黙が流れた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「なあ、みんな」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が、ゆっくりと立ち上がった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「俺、こう見えて推理が趣味なんだ。よかったら、犯人を探させてくれないか」"
+        },
+        {
+          "type": "dialogue",
+          "text": "真壁沙織「は？　芸人が探偵ごっこ？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「ごっこじゃないよ。本気だ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の目は、真剣そのものだった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "鷹野美雪「お願いします」"
+        },
+        {
+          "type": "narration",
+          "text": "美雪が、涙を拭いながら言った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "鷹野美雪「夫を殺した犯人を見つけてください」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡は頷いた。"
+        },
+        {
+          "type": "narration",
+          "text": "そして、私の方を向いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「主人公名。手伝ってくれるか？」"
+        }
+      ],
+      "choices": [
+        {
+          "label": "もちろんだ、一緒に調べよう",
+          "nextScene": "route_a_scene6"
+        },
+        {
+          "label": "いや、危険すぎる、やめておけ",
+          "nextScene": "route_b_stub"
+        },
+        {
+          "label": "俺は、一人で調べたい",
+          "nextScene": "route_c_stub"
+        }
+      ]
+    },
+    "route_a_scene6": {
+      "background": "dark_room",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐A　協力ルート】"
+        },
+        {
+          "type": "system",
+          "text": "シーン６　捜査開始"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「もちろんだ。一緒に調べよう」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「ありがとな」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は少しだけ微笑んだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「じゃあ、まず現場をもう一度見に行こう」"
+        },
+        {
+          "type": "narration",
+          "text": "私たちは二階へ向かった。"
+        }
+      ],
+      "next": "route_a_scene7"
+    },
+    "route_a_scene7": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "シーン７　現場検証"
+        },
+        {
+          "type": "system",
+          "text": "[BGM: 緊張感のあるピアノ]"
+        },
+        {
+          "type": "narration",
+          "text": "鷹野誠一の遺体は、そのままの状態で残されていた。山岡は手袋をはめ、慎重に周囲を調べ始めた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「見ろ、これ」"
+        },
+        {
+          "type": "narration",
+          "text": "彼が指さしたのは、誠一の手に握られていた紙片だった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「何か書いてある」"
+        },
+        {
+          "type": "narration",
+          "text": "紙片には、震える文字でこう書かれていた。"
+        },
+        {
+          "type": "system",
+          "text": "カゲギツネ",
+          "effect": "flash"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「かげぎつね」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「影狐？　妖怪の一種か？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「ああ。この地方に伝わる、人を惑わす狐の妖怪だ。だが、妖怪が人を殺すわけがない」"
+        },
+        {
+          "type": "narration",
+          "text": "彼は紙片を見つめながら、呟いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「これはダイイングメッセージだ。被害者が最期に残した、犯人を示す手がかり」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「カゲギツネが犯人？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「いや、もっと深い意味があるはずだ」"
+        },
+        {
+          "type": "narration",
+          "text": "その時。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 床がきしむ音]",
+          "se": "footsteps_snow"
+        },
+        {
+          "type": "narration",
+          "text": "廊下から、微かな物音がした。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "すぐに廊下を確認する",
+          "nextScene": "route_a1_end"
+        },
+        {
+          "label": "山岡に目配せして、挟み撃ちにする",
+          "nextScene": "route_a2_end"
+        },
+        {
+          "label": "気づかないふりをして、相手を油断させる",
+          "nextScene": "route_a3_stub"
+        }
+      ]
+    },
+    "route_a1_end": {
+      "background": "dark_room",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐A-1　廊下を確認】"
+        },
+        {
+          "type": "narration",
+          "text": "私は素早く廊下に飛び出した。"
+        },
+        {
+          "type": "narration",
+          "text": "だがそこには誰もいなかった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「気のせいか？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「いや、誰かいたな。足音が聞こえた」"
+        },
+        {
+          "type": "narration",
+          "text": "暗い廊下の先を見つめながら、山岡は呟いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「誰かが、俺たちを監視している」"
+        },
+        {
+          "type": "system",
+          "text": "【ここまで実装】"
+        },
+        {
+          "type": "narration",
+          "text": "物語はまだ続く――。"
+        },
+        {
+          "type": "narration",
+          "text": "カゲギツネの正体は？犯人は誰なのか？"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "route_a2_end": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐A-2　挟み撃ち】"
+        },
+        {
+          "type": "narration",
+          "text": "私は山岡にアイコンタクトを送った。彼は即座に理解し、静かに頷いた。"
+        },
+        {
+          "type": "narration",
+          "text": "私は表から、山岡は裏口から。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 足音、揉み合い]",
+          "se": "struggle"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「捕まえた」"
+        },
+        {
+          "type": "narration",
+          "text": "廊下に飛び出すと、山岡が誰かを押さえつけていた。"
+        },
+        {
+          "type": "narration",
+          "text": "その人物は小林健太だった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "小林「ち、違うっす。俺は様子を見に来ただけで」"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「こんな時間に？　一人で？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "小林「だ、だって。怖くて眠れなくて」"
+        },
+        {
+          "type": "narration",
+          "text": "彼の顔は青ざめていた。嘘をついているようには見えないが。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「まあいい。今日は自分の部屋にいろ。いいな？」"
+        },
+        {
+          "type": "dialogue",
+          "text": "小林「は、はい」"
+        },
+        {
+          "type": "narration",
+          "text": "小林は逃げるように去っていった。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「どう思う？」"
+        },
+        {
+          "type": "system",
+          "text": "【ここまで実装】"
+        },
+        {
+          "type": "narration",
+          "text": "小林健太は怪しいのか？それとも別の誰かが犯人なのか？"
+        },
+        {
+          "type": "narration",
+          "text": "謎は深まるばかりだ――。"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "route_a3_stub": {
+      "background": "dark_room",
+      "bgm": "mysterious",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐A-3　気づかないふり】"
+        },
+        {
+          "type": "narration",
+          "text": "私は山岡に目で合図を送り、気づかないふりを続けた。"
+        },
+        {
+          "type": "narration",
+          "text": "相手を油断させる作戦だ。"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐は未実装です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "route_b_stub": {
+      "background": "mansion",
+      "bgm": "sad",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐B　拒否ルート】"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「いや、危険すぎる。やめておけ」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡は少し残念そうな表情を浮かべたが、頷いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「そうか。まあ、無理強いはしないよ」"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐は未実装です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
+        }
+      ]
+    },
+    "route_c_stub": {
+      "background": "mansion",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【分岐C　単独調査ルート】"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「俺は、一人で調べたい」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡は驚いたように目を見開いた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「一人で？　危険だぞ」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「わかってる。でも、これは自分でやりたいんだ」"
+        },
+        {
+          "type": "system",
+          "text": "【この分岐は未実装です】"
+        },
+        {
+          "type": "narration",
+          "text": "続きは今後追加予定です。"
+        },
+        {
+          "type": "system",
+          "text": "【TO BE CONTINUED...】"
         }
       ]
     }

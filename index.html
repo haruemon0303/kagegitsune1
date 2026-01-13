@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>影狐 - Sound Novel</title>
+    <title>かげぎつねの山 - Sound Novel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- 初回タップ用のオーバーレイ（iOS音声制限対応） -->
     <div id="tapToStart" class="tap-overlay">
         <div class="tap-message">
-            <h2>影狐</h2>
+            <h2>かげぎつねの山</h2>
             <p>タップしてスタート</p>
+        </div>
+    </div>
+
+    <!-- 主人公名入力パネル -->
+    <div id="nameInputPanel" class="panel hidden">
+        <div class="panel-content">
+            <h2>主人公の名前</h2>
+            <p style="color: #e0e0e0; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                あなたの名前を入力してください（8文字以内）
+            </p>
+            <div class="setting-item">
+                <input type="text" id="playerNameInput" maxlength="8" placeholder="主人公"
+                       style="width: 100%; padding: 0.8rem; font-size: 1.1rem; border: 2px solid rgba(100, 150, 200, 0.5);
+                              background: rgba(0, 0, 0, 0.5); color: #fff; border-radius: 0.5rem;">
+            </div>
+            <button class="menu-btn" id="confirmNameBtn">決定</button>
         </div>
     </div>
 
@@ -21,7 +37,7 @@
     <div id="gameContainer" class="game-container hidden">
         <!-- ヘッダー -->
         <header class="game-header">
-            <h1 id="gameTitle">影狐</h1>
+            <h1 id="gameTitle">かげぎつねの山</h1>
             <div class="header-buttons">
                 <button id="menuBtn" class="icon-btn" title="メニュー">☰</button>
                 <button id="settingsBtn" class="icon-btn" title="設定">⚙</button>
@@ -53,6 +69,7 @@
                 <h2>メニュー</h2>
                 <button class="menu-btn" id="saveBtn">セーブ</button>
                 <button class="menu-btn" id="loadBtn">ロード</button>
+                <button class="menu-btn" id="changeNameBtn">名前変更</button>
                 <button class="menu-btn" id="restartBtn">最初から</button>
                 <button class="menu-btn" id="closeMenuBtn">閉じる</button>
             </div>

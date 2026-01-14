@@ -17,6 +17,11 @@ const END_MARKER = '【END】';
 // BGM/SE管理
 let bgmAudio = null;
 let currentBgm = null;
+let audioContext = null;
+let bgmGainNode = null;
+let seGainNode = null;
+let bgmNodes = [];
+let seNodes = [];
 
 // 履歴とログ
 let textLog = [];
@@ -68,7 +73,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ========================================
 async function loadStoryData() {
     try {
-        const response = await fetch('story.json');
+        const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+        const storyUrl = new URL(`${basePath}story.json`, window.location.origin);
+        const response = await fetch(storyUrl.toString());
         storyData = await response.json();
         console.log('Story data loaded:', storyData);
     } catch (error) {
@@ -122,6 +129,7 @@ function showTapOverlay() {
     const overlay = document.getElementById('tapToStart');
     overlay.addEventListener('click', () => {
         overlay.classList.add('hidden');
+        stopAllAudio();
         enableAudio();
 
         // プレイヤー名をロード
@@ -138,10 +146,16 @@ function showTapOverlay() {
 }
 
 function enableAudio() {
-    audioEnabled = true;
-    // iOS対策：ユーザー操作後に音声を有効化
-    const dummyAudio = new Audio();
-    dummyAudio.play().catch(() => {});
+    initAudioContext();
+    if (audioContext) {
+        audioContext.resume().then(() => {
+            audioEnabled = true;
+        }).catch(() => {
+            audioEnabled = false;
+        });
+    } else {
+        audioEnabled = true;
+    }
 }
 
 // ========================================
@@ -161,6 +175,7 @@ function startGame() {
 // シーンのロード
 // ========================================
 function loadScene(sceneId) {
+    stopAllAudio();
     const scene = storyData.scenes[sceneId];
     if (!scene) {
         console.error('Scene not found:', sceneId);
@@ -496,25 +511,38 @@ function playBgm(bgmId) {
     if (!bgmId || !storyData.bgm[bgmId]) return;
 
     currentBgm = bgmId;
-    bgmAudio = new Audio(storyData.bgm[bgmId]);
-    bgmAudio.loop = true;
-    bgmAudio.volume = settings.muteBgm ? 0 : settings.bgmVolume / 100;
+    stopWebAudioNodes(bgmNodes);
+    bgmNodes = [];
 
-    if (audioEnabled) {
-        bgmAudio.play().catch(err => console.log('BGM play failed:', err));
-    }
+    if (!audioEnabled) return;
+    initAudioContext();
+    if (!audioContext || !bgmGainNode) return;
+
+    const bgmNodeSet = createBgmNodes(bgmId);
+    if (bgmNodeSet.length === 0) return;
+
+    bgmNodes = bgmNodeSet;
+    bgmNodes.forEach(node => node.start());
 }
 
 function playSe(seId) {
     if (!seId || !storyData.se[seId]) return;
     if (settings.muteSe) return;
 
-    const se = new Audio(storyData.se[seId]);
-    se.volume = settings.seVolume / 100;
+    if (!audioEnabled) return;
+    initAudioContext();
+    if (!audioContext || !seGainNode) return;
 
-    if (audioEnabled) {
-        se.play().catch(err => console.log('SE play failed:', err));
-    }
+    const seNodeSet = createSeNodes(seId);
+    if (seNodeSet.length === 0) return;
+
+    seNodes.push(...seNodeSet);
+    seNodeSet.forEach(node => {
+        const startTime = node.startAt ?? audioContext.currentTime;
+        const stopTime = node.stopAt ?? (audioContext.currentTime + node.duration);
+        node.start(startTime);
+        node.stop(stopTime);
+    });
 }
 
 // ========================================
@@ -624,11 +652,19 @@ function updateBgmVolume(e) {
     if (bgmAudio && !settings.muteBgm) {
         bgmAudio.volume = settings.bgmVolume / 100;
     }
+
+    if (bgmGainNode && !settings.muteBgm) {
+        bgmGainNode.gain.value = settings.bgmVolume / 100;
+    }
 }
 
 function updateSeVolume(e) {
     settings.seVolume = parseInt(e.target.value);
     document.getElementById('seVolumeValue').textContent = settings.seVolume;
+
+    if (seGainNode && !settings.muteSe) {
+        seGainNode.gain.value = settings.seVolume / 100;
+    }
 }
 
 function toggleMuteBgm(e) {
@@ -637,10 +673,18 @@ function toggleMuteBgm(e) {
     if (bgmAudio) {
         bgmAudio.volume = settings.muteBgm ? 0 : settings.bgmVolume / 100;
     }
+
+    if (bgmGainNode) {
+        bgmGainNode.gain.value = settings.muteBgm ? 0 : settings.bgmVolume / 100;
+    }
 }
 
 function toggleMuteSe(e) {
     settings.muteSe = e.target.checked;
+
+    if (seGainNode) {
+        seGainNode.gain.value = settings.muteSe ? 0 : settings.seVolume / 100;
+    }
 }
 
 function toggleDebugMode(e) {
@@ -694,6 +738,8 @@ function loadGame() {
 
 function restartGame() {
     if (!confirm('最初からやり直しますか？')) return;
+
+    stopAllAudio();
 
     // すべてのデータをクリア
     textLog = [];
@@ -841,4 +887,288 @@ function showNameInput() {
 function replacePlayerName(text) {
     if (!text) return text;
     return text.replace(/主人公名/g, playerName);
+}
+
+function stopAllAudio() {
+    if (bgmAudio) {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+        bgmAudio = null;
+    }
+
+    currentBgm = null;
+    stopWebAudioNodes(bgmNodes);
+    stopWebAudioNodes(seNodes);
+    bgmNodes = [];
+    seNodes = [];
+
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+}
+
+function initAudioContext() {
+    if (audioContext) return;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    audioContext = new AudioContextClass();
+    bgmGainNode = audioContext.createGain();
+    seGainNode = audioContext.createGain();
+    bgmGainNode.gain.value = settings.muteBgm ? 0 : settings.bgmVolume / 100;
+    seGainNode.gain.value = settings.muteSe ? 0 : settings.seVolume / 100;
+    bgmGainNode.connect(audioContext.destination);
+    seGainNode.connect(audioContext.destination);
+}
+
+function stopWebAudioNodes(nodes) {
+    nodes.forEach(node => {
+        try {
+            node.stop();
+        } catch (error) {
+            console.warn('Failed to stop audio node:', error);
+        }
+    });
+}
+
+function createNoiseBuffer(durationSeconds = 2) {
+    const sampleRate = audioContext.sampleRate;
+    const buffer = audioContext.createBuffer(1, durationSeconds * sampleRate, sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * 0.4;
+    }
+    return buffer;
+}
+
+function createBgmNodes(bgmId) {
+    switch (bgmId) {
+        case 'wind':
+            return [createWindBgmNode(0.05)];
+        case 'tense':
+        case 'silence':
+            return createDroneNode(110, 0.03);
+        case 'mysterious':
+            return createDroneNode(90, 0.04);
+        case 'sad':
+            return createDroneNode(70, 0.03);
+        default:
+            return createDroneNode(80, 0.03);
+    }
+}
+
+function createSeNodes(seId) {
+    switch (seId) {
+        case 'wiper':
+            return [createSwipeSeNode()];
+        case 'gust':
+            return [createGustSeNode()];
+        case 'door_close':
+            return [createKnockSeNode()];
+        case 'footsteps_snow':
+            return [createFootstepsSeNode()];
+        case 'scream':
+            return [createScreamSeNode()];
+        case 'heartbeat':
+            return createHeartbeatSeNodes();
+        case 'struggle':
+            return [createStruggleSeNode()];
+        default:
+            return [];
+    }
+}
+
+function createWindBgmNode(volume = 0.05) {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(4);
+    source.loop = true;
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 400;
+    filter.Q.value = 0.7;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = volume;
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(bgmGainNode);
+
+    source.duration = 0;
+    return source;
+}
+
+function createDroneNode(frequency, volume) {
+    const source = audioContext.createOscillator();
+    source.type = 'sine';
+    source.frequency.value = frequency;
+
+    const lfo = audioContext.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 0.15;
+
+    const lfoGain = audioContext.createGain();
+    lfoGain.gain.value = 3;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = volume;
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(source.frequency);
+    source.connect(gain);
+    gain.connect(bgmGainNode);
+
+    source.duration = 0;
+    lfo.duration = 0;
+    return [source, lfo];
+}
+
+function createSwipeSeNode() {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(0.2);
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 300;
+    filter.Q.value = 0.8;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.12;
+    gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.2);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.2;
+    return source;
+}
+
+function createGustSeNode() {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(0.6);
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 500;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.15;
+    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.6);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.6;
+    return source;
+}
+
+function createKnockSeNode() {
+    const source = audioContext.createOscillator();
+    source.type = 'triangle';
+    source.frequency.value = 140;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.2;
+    gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.25);
+
+    source.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.25;
+    return source;
+}
+
+function createFootstepsSeNode() {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(0.3);
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 350;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.1;
+    gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.3;
+    return source;
+}
+
+function createScreamSeNode() {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(0.4);
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 900;
+    filter.Q.value = 0.6;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.18;
+    gain.gain.setValueAtTime(0.18, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.4);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.4;
+    return source;
+}
+
+function createHeartbeatSeNodes() {
+    const nodes = [];
+    const baseTime = audioContext.currentTime;
+    [0, 0.25].forEach(offset => {
+        const osc = audioContext.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = 80;
+
+        const gain = audioContext.createGain();
+        gain.gain.value = 0.15;
+        gain.gain.setValueAtTime(0.15, baseTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, baseTime + offset + 0.2);
+
+        osc.connect(gain);
+        gain.connect(seGainNode);
+
+        osc.duration = 0.25;
+        osc.startAt = baseTime + offset;
+        osc.stopAt = baseTime + offset + 0.25;
+        nodes.push(osc);
+    });
+    return nodes;
+}
+
+function createStruggleSeNode() {
+    const source = audioContext.createBufferSource();
+    source.buffer = createNoiseBuffer(0.35);
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 450;
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.14;
+    gain.gain.setValueAtTime(0.14, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.35);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(seGainNode);
+
+    source.duration = 0.35;
+    return source;
 }

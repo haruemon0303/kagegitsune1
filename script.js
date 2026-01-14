@@ -1,844 +1,1012 @@
 // ========================================
-// グローバル変数
+// Global State
 // ========================================
 let storyData = null;
 let currentScene = null;
 let currentTextIndex = 0;
+
 let isTyping = false;
 let autoMode = false;
 let skipMode = false;
+
 let audioEnabled = false;
+const SOUND_DISABLED = false;
+
+// TRUE END -> SECRET prompt
 let inTrueEnd = false;
 let isSecretEndPrompt = false;
 let isSecretEndPromptQueued = false;
 const TRUE_END_MARKER = '【TRUE END';
 const END_MARKER = '【END】';
 
-// BGM/SE管理
-let bgmAudio = null;
-let currentBgm = null;
-
-// 履歴とログ
+// Logs / read markers
 let textLog = [];
 let readScenes = new Set();
 
-// プレイヤー名
+// Player name
 let playerName = '主人公';
 
-// フラグ管理（SECRET END条件）
+// SECRET flags
 let flags = {
-    coop: false,
-    pinch: false,
-    needMoreInfo: false,
-    suspectMiyuki: false,
-    didNotGetAlternativeNormal: true
+  coop: false,
+  pinch: false,
+  needMoreInfo: false,
+  suspectMiyuki: false,
+  didNotGetAlternativeNormal: true
 };
 
-// 設定
+// Settings
 let settings = {
-    bgmVolume: 70,
-    seVolume: 80,
-    muteBgm: false,
-    muteSe: false,
-    debugMode: false
+  bgmVolume: 70,
+  seVolume: 80,
+  muteBgm: false,
+  muteSe: false,
+  debugMode: false
 };
 
 // ========================================
-// 初期化
+// WebAudio (generated placeholder audio)
+// ========================================
+let audioContext = null;
+let bgmGainNode = null;
+let seGainNode = null;
+let currentBgm = null;
+
+// Keep references so we can stop them
+let bgmNodes = [];
+let seNodes = [];
+
+// ========================================
+// Init
 // ========================================
 document.addEventListener('DOMContentLoaded', async () => {
-    // 設定をロード
-    loadSettings();
+  loadSettings();
+  loadFlags();
 
-    // フラグをロード
-    loadFlags();
+  await loadStoryData();
+  setupEventListeners();
 
-    // ストーリーデータをロード
-    await loadStoryData();
-
-    // イベントリスナーを設定
-    setupEventListeners();
-
-    // 初回タップオーバーレイを表示
-    showTapOverlay();
+  showTapOverlay();
 });
 
 // ========================================
-// ストーリーデータのロード
+// Load story.json
 // ========================================
 async function loadStoryData() {
-    try {
-        const response = await fetch('story.json');
-        storyData = await response.json();
-        console.log('Story data loaded:', storyData);
-    } catch (error) {
-        console.error('Failed to load story data:', error);
-        alert('ストーリーデータの読み込みに失敗しました');
-    }
+  try {
+    const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+    const storyUrl = new URL(`${basePath}story.json`, window.location.origin);
+    const response = await fetch(storyUrl.toString(), { cache: 'no-store' });
+    storyData = await response.json();
+    console.log('Story data loaded:', storyData);
+  } catch (error) {
+    console.error('Failed to load story data:', error);
+    alert('ストーリーデータの読み込みに失敗しました');
+  }
 }
 
 // ========================================
-// イベントリスナーの設定
+// Event listeners
 // ========================================
 function setupEventListeners() {
-    // ヘッダーボタン
-    document.getElementById('menuBtn').addEventListener('click', showMenu);
-    document.getElementById('settingsBtn').addEventListener('click', showSettings);
+  // Header
+  document.getElementById('menuBtn')?.addEventListener('click', showMenu);
+  document.getElementById('settingsBtn')?.addEventListener('click', showSettings);
 
-    // テキストエリアをタップで次へ
-    document.getElementById('textArea').addEventListener('click', handleTextAreaClick);
+  // Tap text area -> next
+  document.getElementById('textArea')?.addEventListener('click', handleTextAreaClick);
 
-    // テキストボックスコントロール
-    document.getElementById('logBtn').addEventListener('click', showLog);
-    document.getElementById('autoBtn').addEventListener('click', toggleAuto);
-    document.getElementById('skipBtn').addEventListener('click', toggleSkip);
+  // Controls
+  document.getElementById('logBtn')?.addEventListener('click', showLog);
+  document.getElementById('autoBtn')?.addEventListener('click', toggleAuto);
+  document.getElementById('skipBtn')?.addEventListener('click', toggleSkip);
 
-    // メニューパネル
-    document.getElementById('saveBtn').addEventListener('click', saveGame);
-    document.getElementById('loadBtn').addEventListener('click', loadGame);
-    document.getElementById('changeNameBtn').addEventListener('click', showNameInput);
-    document.getElementById('restartBtn').addEventListener('click', restartGame);
-    document.getElementById('closeMenuBtn').addEventListener('click', hideMenu);
+  // Menu panel
+  document.getElementById('saveBtn')?.addEventListener('click', saveGame);
+  document.getElementById('loadBtn')?.addEventListener('click', loadGame);
+  document.getElementById('changeNameBtn')?.addEventListener('click', showNameInput);
+  document.getElementById('restartBtn')?.addEventListener('click', restartGame);
+  document.getElementById('closeMenuBtn')?.addEventListener('click', hideMenu);
 
-    // 名前入力
-    document.getElementById('confirmNameBtn').addEventListener('click', confirmPlayerName);
+  // Name input
+  document.getElementById('confirmNameBtn')?.addEventListener('click', confirmPlayerName);
 
-    // 設定パネル
-    document.getElementById('bgmVolume').addEventListener('input', updateBgmVolume);
-    document.getElementById('seVolume').addEventListener('input', updateSeVolume);
-    document.getElementById('muteBgm').addEventListener('change', toggleMuteBgm);
-    document.getElementById('muteSe').addEventListener('change', toggleMuteSe);
-    document.getElementById('debugMode').addEventListener('change', toggleDebugMode);
-    document.getElementById('closeSettingsBtn').addEventListener('click', hideSettings);
+  // Settings
+  document.getElementById('bgmVolume')?.addEventListener('input', updateBgmVolume);
+  document.getElementById('seVolume')?.addEventListener('input', updateSeVolume);
+  document.getElementById('muteBgm')?.addEventListener('change', toggleMuteBgm);
+  document.getElementById('muteSe')?.addEventListener('change', toggleMuteSe);
+  document.getElementById('debugMode')?.addEventListener('change', toggleDebugMode);
+  document.getElementById('closeSettingsBtn')?.addEventListener('click', hideSettings);
 
-    // ログパネル
-    document.getElementById('closeLogBtn').addEventListener('click', hideLog);
+  // Log
+  document.getElementById('closeLogBtn')?.addEventListener('click', hideLog);
 }
 
 // ========================================
-// 初回タップオーバーレイ
+// Tap-to-start overlay
 // ========================================
 function showTapOverlay() {
-    const overlay = document.getElementById('tapToStart');
-    overlay.addEventListener('click', () => {
-        overlay.classList.add('hidden');
-        enableAudio();
+  const overlay = document.getElementById('tapToStart');
+  if (!overlay) return;
 
-        // プレイヤー名をロード
-        loadPlayerName();
+  overlay.addEventListener('click', async () => {
+    overlay.classList.add('hidden');
 
-        // 名前が保存されていない場合は入力パネルを表示
-        if (!localStorage.getItem('soundNovelPlayerName')) {
-            showNameInputPanel();
-        } else {
-            document.getElementById('gameContainer').classList.remove('hidden');
-            startGame();
-        }
-    });
+    // Stop any leftover audio just in case
+    stopAllAudio();
+
+    // Enable audio (iOS needs user gesture)
+    await enableAudio();
+
+    // Load player name
+    loadPlayerName();
+
+    if (!localStorage.getItem('soundNovelPlayerName')) {
+      showNameInputPanel();
+    } else {
+      document.getElementById('gameContainer')?.classList.remove('hidden');
+      startGame();
+    }
+  }, { once: true });
 }
 
-function enableAudio() {
+async function enableAudio() {
+  if (SOUND_DISABLED) {
+    audioEnabled = false;
+    return;
+  }
+
+  initAudioContext();
+
+  if (audioContext) {
+    try {
+      await audioContext.resume();
+      audioEnabled = true;
+    } catch (e) {
+      console.warn('AudioContext resume failed:', e);
+      audioEnabled = false;
+    }
+  } else {
     audioEnabled = true;
-    // iOS対策：ユーザー操作後に音声を有効化
-    const dummyAudio = new Audio();
-    dummyAudio.play().catch(() => {});
+  }
 }
 
 // ========================================
-// ゲーム開始
+// Start game
 // ========================================
 function startGame() {
-    if (!storyData) {
-        console.error('Story data not loaded');
-        return;
-    }
+  if (!storyData) {
+    console.error('Story data not loaded');
+    return;
+  }
 
-    // 最初のシーンを開始
-    loadScene(storyData.startScene || 'opening');
+  document.getElementById('textArea').innerHTML = '';
+  hideChoices();
+
+  loadScene(storyData.startScene || 'opening');
 }
 
 // ========================================
-// シーンのロード
+// Load scene
 // ========================================
 function loadScene(sceneId) {
-    const scene = storyData.scenes[sceneId];
-    if (!scene) {
-        console.error('Scene not found:', sceneId);
-        return;
-    }
+  // Stop only BGM on scene changes (SE is line-based)
+  stopBgmOnly();
 
-    currentScene = scene;
-    currentScene.id = sceneId;
-    currentTextIndex = 0;
+  const scene = storyData?.scenes?.[sceneId];
+  if (!scene) {
+    console.error('Scene not found:', sceneId);
+    return;
+  }
 
-    // 既読フラグを設定
-    readScenes.add(sceneId);
+  currentScene = scene;
+  currentScene.id = sceneId;
+  currentTextIndex = 0;
 
-    // 背景を設定
-    setBackground(scene.background);
+  readScenes.add(sceneId);
 
-    // シルエットを設定
-    setSilhouette(scene.silhouette);
+  setBackground(scene.background);
+  setSilhouette(scene.silhouette);
 
-    // BGMを再生
-    if (scene.bgm) {
-        playBgm(scene.bgm);
-    }
+  if (scene.bgm) playBgm(scene.bgm);
 
-    // 選択肢エリアを非表示
-    hideChoices();
-
-    // デバッグ表示を更新
-    updateDebugDisplay();
-
-    // テキスト表示を開始
-    showNextText();
+  hideChoices();
+  updateDebugDisplay();
+  showNextText();
 }
 
 // ========================================
-// 背景の設定
+// Background / silhouette
 // ========================================
 function setBackground(bgId) {
-    const bgElement = document.getElementById('background');
-    if (bgId && storyData.backgrounds[bgId]) {
-        bgElement.style.backgroundImage = `url(${storyData.backgrounds[bgId]})`;
-    } else {
-        bgElement.style.backgroundImage = '';
-    }
+  const bgElement = document.getElementById('background');
+  if (!bgElement) return;
+
+  if (bgId && storyData?.backgrounds?.[bgId]) {
+    bgElement.style.backgroundImage = `url(${storyData.backgrounds[bgId]})`;
+  } else {
+    bgElement.style.backgroundImage = '';
+  }
 }
 
-// ========================================
-// シルエットの設定
-// ========================================
 function setSilhouette(silId) {
-    const silElement = document.getElementById('silhouette');
-    if (silId && storyData.silhouettes && storyData.silhouettes[silId]) {
-        silElement.style.backgroundImage = `url(${storyData.silhouettes[silId]})`;
-        silElement.classList.add('show');
-    } else {
-        silElement.classList.remove('show');
-        silElement.style.backgroundImage = '';
-    }
+  const silElement = document.getElementById('silhouette');
+  if (!silElement) return;
+
+  if (silId && storyData?.silhouettes?.[silId]) {
+    silElement.style.backgroundImage = `url(${storyData.silhouettes[silId]})`;
+    silElement.classList.add('show');
+  } else {
+    silElement.classList.remove('show');
+    silElement.style.backgroundImage = '';
+  }
 }
 
 // ========================================
-// テキスト表示
+// Text progression
 // ========================================
 function showNextText() {
-    if (currentTextIndex >= currentScene.text.length) {
-        // すべてのテキストを表示し終えた
-        if (currentScene.choices && currentScene.choices.length > 0) {
-            // 選択肢を表示
-            showChoices();
-        } else if (currentScene.next) {
-            // 次のシーンへ自動遷移
-            setTimeout(() => loadScene(currentScene.next), 1000);
-        }
-        return;
+  if (!currentScene) return;
+  if (isSecretEndPrompt) return;
+
+  if (currentTextIndex >= currentScene.text.length) {
+    if (currentScene.choices && currentScene.choices.length > 0) {
+      showChoices();
+    } else if (currentScene.next) {
+      setTimeout(() => loadScene(currentScene.next), 800);
     }
+    return;
+  }
 
-    const textData = currentScene.text[currentTextIndex];
+  const textData = currentScene.text[currentTextIndex];
 
-    // 演出を実行
-    if (textData.effect) {
-        executeEffect(textData.effect);
-    }
+  if (textData.effect) executeEffect(textData.effect);
+  if (textData.se) playSe(textData.se);
 
-    // SEを再生
-    if (textData.se) {
-        playSe(textData.se);
-    }
-
-    // テキストを表示
-    displayText(textData);
-
-    currentTextIndex++;
+  displayText(textData);
+  currentTextIndex++;
 }
 
-// ========================================
-// テキスト表示（タイプライター風）
-// ========================================
 function displayText(textData) {
-    const textArea = document.getElementById('textArea');
-    const lineDiv = document.createElement('div');
-    lineDiv.className = `text-line text-${textData.type || 'narration'}`;
-    textArea.appendChild(lineDiv);
+  const textArea = document.getElementById('textArea');
+  if (!textArea) return;
 
-    // ログに追加（置換後のテキストで）
-    const replacedText = replacePlayerName(textData.text);
-    addToLog({ ...textData, text: replacedText });
+  const lineDiv = document.createElement('div');
+  lineDiv.className = `text-line text-${textData.type || 'narration'}`;
+  textArea.appendChild(lineDiv);
 
-    // タイプライター表示
-    isTyping = true;
-    const text = replacedText;
-    let charIndex = 0;
+  const replacedText = replacePlayerName(textData.text);
+  addToLog({ ...textData, text: replacedText });
 
-    const typeInterval = setInterval(() => {
-        if (charIndex < text.length) {
-            lineDiv.textContent += text[charIndex];
-            charIndex++;
+  isTyping = true;
+  const text = replacedText || '';
+  let charIndex = 0;
 
-            // タイプ中もスクロール追従
-            textArea.scrollTop = textArea.scrollHeight;
-        } else {
-            clearInterval(typeInterval);
-            isTyping = false;
+  const typeInterval = setInterval(() => {
+    if (charIndex < text.length) {
+      lineDiv.textContent += text[charIndex++];
+      textArea.scrollTop = textArea.scrollHeight;
+      return;
+    }
 
-            if (textData.type === 'system') {
-                if (text.includes(TRUE_END_MARKER)) {
-                    inTrueEnd = true;
-                }
+    clearInterval(typeInterval);
+    isTyping = false;
 
-                if (text.includes(END_MARKER)) {
-                    if (inTrueEnd && checkSecretEndConditions()) {
-                        if (!isSecretEndPrompt && !isSecretEndPromptQueued) {
-                            isSecretEndPromptQueued = true;
-                            setTimeout(() => {
-                                showSecretEndPrompt();
-                            }, 800);
-                        }
-                        return;
-                    }
+    // TRUE/SECRET detection
+    if (textData.type === 'system') {
+      if (text.includes(TRUE_END_MARKER)) {
+        inTrueEnd = true;
+      }
 
-                    inTrueEnd = false;
-                }
-            }
-
-            // オートモード時は自動で次へ
-            if (autoMode) {
-                setTimeout(() => {
-                    if (autoMode) showNextText();
-                }, 1500);
-            }
-
-            // スキップモード時は即座に次へ
-            if (skipMode && readScenes.has(currentScene.id)) {
-                setTimeout(() => {
-                    if (skipMode) showNextText();
-                }, 100);
-            }
+      if (text.includes(END_MARKER)) {
+        if (inTrueEnd && checkSecretEndConditions()) {
+          if (!isSecretEndPrompt && !isSecretEndPromptQueued) {
+            isSecretEndPromptQueued = true;
+            setTimeout(() => showSecretEndPrompt(), 800);
+          }
+          return; // don't auto-advance
         }
-    }, 50);
+        inTrueEnd = false;
+      }
+    }
 
-    // スクロールを最下部へ
-    textArea.scrollTop = textArea.scrollHeight;
+    // Auto
+    if (autoMode) {
+      setTimeout(() => {
+        if (autoMode) showNextText();
+      }, 1200);
+    }
+
+    // Skip (only read scenes)
+    if (skipMode && readScenes.has(currentScene.id)) {
+      setTimeout(() => {
+        if (skipMode) showNextText();
+      }, 80);
+    }
+  }, 40);
+
+  textArea.scrollTop = textArea.scrollHeight;
 }
 
-// ========================================
-// テキストエリアクリック処理
-// ========================================
 function handleTextAreaClick() {
-    if (isTyping) {
-        // タイピング中ならスキップ（全文表示）
-        return;
-    }
+  if (isTyping) return;
+  if (isChoicesVisible()) return;
+  if (isSecretEndPrompt) return;
 
-    if (isChoicesVisible()) {
-        return;
-    }
-
-    // 次のテキストへ
-    showNextText();
+  showNextText();
 }
 
 // ========================================
-// 選択肢の表示
+// Choices
 // ========================================
 function showChoices() {
-    const choicesArea = document.getElementById('choicesArea');
-    choicesArea.innerHTML = '';
-    choicesArea.classList.remove('hidden');
-    isSecretEndPrompt = false;
-    isSecretEndPromptQueued = false;
+  const choicesArea = document.getElementById('choicesArea');
+  if (!choicesArea) return;
 
-    currentScene.choices.forEach((choice, index) => {
-        const button = document.createElement('button');
-        button.className = 'choice-btn';
-        button.textContent = replacePlayerName(choice.label);
-        button.style.animationDelay = `${index * 0.1}s`;
-        button.addEventListener('click', () => selectChoice(choice));
-        choicesArea.appendChild(button);
-    });
+  choicesArea.innerHTML = '';
+  choicesArea.classList.remove('hidden');
+
+  isSecretEndPrompt = false;
+  isSecretEndPromptQueued = false;
+
+  currentScene.choices.forEach((choice, index) => {
+    const button = document.createElement('button');
+    button.className = 'choice-btn';
+    button.textContent = replacePlayerName(choice.label);
+    button.style.animationDelay = `${index * 0.08}s`;
+    button.addEventListener('click', () => selectChoice(choice));
+    choicesArea.appendChild(button);
+  });
 }
 
 function hideChoices() {
-    const choicesArea = document.getElementById('choicesArea');
-    choicesArea.classList.add('hidden');
-    choicesArea.innerHTML = '';
-    isSecretEndPrompt = false;
-    isSecretEndPromptQueued = false;
+  const choicesArea = document.getElementById('choicesArea');
+  if (!choicesArea) return;
+
+  choicesArea.classList.add('hidden');
+  choicesArea.innerHTML = '';
+
+  isSecretEndPrompt = false;
+  isSecretEndPromptQueued = false;
 }
 
 function selectChoice(choice) {
-    hideChoices();
+  hideChoices();
 
-    // フラグ管理（SECRET END条件）
-    trackChoiceFlags(currentScene.id, choice.nextScene, choice.label);
+  trackChoiceFlags(currentScene.id, choice.nextScene, choice.label);
 
-    // テキストエリアをクリア
-    document.getElementById('textArea').innerHTML = '';
+  const textArea = document.getElementById('textArea');
+  if (textArea) textArea.innerHTML = '';
 
-    // 次のシーンへ
-    if (choice.nextScene) {
-        loadScene(choice.nextScene);
-    }
+  if (choice.nextScene) {
+    loadScene(choice.nextScene);
+  }
 }
 
 function isChoicesVisible() {
-    return !document.getElementById('choicesArea').classList.contains('hidden');
+  const choicesArea = document.getElementById('choicesArea');
+  return choicesArea && !choicesArea.classList.contains('hidden');
 }
 
 function showSecretEndPrompt() {
-    const choicesArea = document.getElementById('choicesArea');
-    choicesArea.innerHTML = '';
-    choicesArea.classList.remove('hidden');
-    isSecretEndPrompt = true;
-    isSecretEndPromptQueued = false;
+  const choicesArea = document.getElementById('choicesArea');
+  if (!choicesArea) return;
 
-    if (autoMode) {
-        autoMode = false;
-        document.getElementById('autoBtn').classList.remove('active');
-    }
+  choicesArea.innerHTML = '';
+  choicesArea.classList.remove('hidden');
 
-    if (skipMode) {
-        skipMode = false;
-        document.getElementById('skipBtn').classList.remove('active');
-    }
+  isSecretEndPrompt = true;
+  isSecretEndPromptQueued = false;
 
-    const secretButton = document.createElement('button');
-    secretButton.className = 'choice-btn';
-    secretButton.textContent = '真相へ進む';
-    secretButton.addEventListener('click', () => {
-        inTrueEnd = false;
-        document.getElementById('textArea').innerHTML = '';
-        hideChoices();
-        loadScene('secret_end_scene');
-    });
-    choicesArea.appendChild(secretButton);
-
-    const titleButton = document.createElement('button');
-    titleButton.className = 'choice-btn';
-    titleButton.textContent = 'タイトルへ戻る';
-    titleButton.addEventListener('click', () => {
-        inTrueEnd = false;
-        hideChoices();
-        restartGame();
-    });
-    choicesArea.appendChild(titleButton);
-}
-
-// ========================================
-// フラグ追跡（SECRET END条件）
-// ========================================
-function trackChoiceFlags(sceneId, nextScene, label) {
-    // chapter2_scene5で「もちろんだ、一緒に調べよう」を選択
-    if (sceneId === 'chapter2_scene5' && nextScene === 'route_a_scene6') {
-        setFlag('coop', true);
-    }
-
-    // route_a_scene7で「挟み撃ち」を選択
-    if (sceneId === 'route_a_scene7' && nextScene === 'route_a2_continuation') {
-        setFlag('pinch', true);
-    }
-
-    // route_a2_continuationで「まだ判断できない、もっと情報が必要だ」を選択
-    if (sceneId === 'route_a2_continuation' && label && label.includes('まだ判断できない')) {
-        setFlag('needMoreInfo', true);
-    }
-
-    // chapter3_scene8で「あなた、何か隠していませんか？」を選択
-    if (sceneId === 'chapter3_scene8' && nextScene === 'route_b_scene1') {
-        setFlag('suspectMiyuki', true);
-    }
-
-    // chapter3_scene9_alternativeに入ったらフラグをfalseに
-    if (nextScene === 'chapter3_scene9_alternative') {
-        setFlag('didNotGetAlternativeNormal', false);
-    }
-}
-
-// ========================================
-// 演出の実行
-// ========================================
-function executeEffect(effect) {
-    const stage = document.querySelector('.stage');
-    const flash = document.getElementById('flash');
-    const noise = document.getElementById('noise');
-
-    switch (effect) {
-        case 'flash':
-            flash.classList.add('flash');
-            setTimeout(() => flash.classList.remove('flash'), 500);
-            break;
-        case 'shake':
-            stage.classList.add('shake');
-            setTimeout(() => stage.classList.remove('shake'), 500);
-            break;
-        case 'noise':
-            noise.classList.add('noise');
-            setTimeout(() => noise.classList.remove('noise'), 2000);
-            break;
-    }
-}
-
-// ========================================
-// BGM管理
-// ========================================
-function playBgm(bgmId) {
-    if (bgmId === currentBgm) return;
-
-    // 既存のBGMを停止
-    if (bgmAudio) {
-        bgmAudio.pause();
-        bgmAudio = null;
-    }
-
-    if (!bgmId || !storyData.bgm[bgmId]) return;
-
-    currentBgm = bgmId;
-    bgmAudio = new Audio(storyData.bgm[bgmId]);
-    bgmAudio.loop = true;
-    bgmAudio.volume = settings.muteBgm ? 0 : settings.bgmVolume / 100;
-
-    if (audioEnabled) {
-        bgmAudio.play().catch(err => console.log('BGM play failed:', err));
-    }
-}
-
-function playSe(seId) {
-    if (!seId || !storyData.se[seId]) return;
-    if (settings.muteSe) return;
-
-    const se = new Audio(storyData.se[seId]);
-    se.volume = settings.seVolume / 100;
-
-    if (audioEnabled) {
-        se.play().catch(err => console.log('SE play failed:', err));
-    }
-}
-
-// ========================================
-// ログ管理
-// ========================================
-function addToLog(textData) {
-    textLog.push({
-        type: textData.type || 'narration',
-        text: textData.text
-    });
-}
-
-function showLog() {
-    const logContent = document.getElementById('logContent');
-    logContent.innerHTML = '';
-
-    textLog.forEach(entry => {
-        const entryDiv = document.createElement('div');
-        entryDiv.className = `log-entry text-${entry.type}`;
-        entryDiv.textContent = entry.text;
-        logContent.appendChild(entryDiv);
-    });
-
-    document.getElementById('logPanel').classList.remove('hidden');
-
-    // スクロールを最下部へ
-    logContent.scrollTop = logContent.scrollHeight;
-}
-
-function hideLog() {
-    document.getElementById('logPanel').classList.add('hidden');
-}
-
-// ========================================
-// オート・スキップ
-// ========================================
-function toggleAuto() {
-    autoMode = !autoMode;
-    const btn = document.getElementById('autoBtn');
-    btn.classList.toggle('active', autoMode);
-
-    if (autoMode) {
-        skipMode = false;
-        document.getElementById('skipBtn').classList.remove('active');
-
-        if (!isTyping) {
-            setTimeout(() => {
-                if (autoMode) showNextText();
-            }, 1500);
-        }
-    }
-}
-
-function toggleSkip() {
-    skipMode = !skipMode;
-    const btn = document.getElementById('skipBtn');
-    btn.classList.toggle('active', skipMode);
-
-    if (skipMode) {
-        autoMode = false;
-        document.getElementById('autoBtn').classList.remove('active');
-
-        // 既読シーンのみスキップ
-        if (!isTyping && readScenes.has(currentScene.id)) {
-            setTimeout(() => {
-                if (skipMode) showNextText();
-            }, 100);
-        }
-    }
-}
-
-// ========================================
-// メニュー
-// ========================================
-function showMenu() {
-    document.getElementById('menuPanel').classList.remove('hidden');
-}
-
-function hideMenu() {
-    document.getElementById('menuPanel').classList.add('hidden');
-}
-
-// ========================================
-// 設定
-// ========================================
-function showSettings() {
-    // 現在の設定値をUIに反映
-    document.getElementById('bgmVolume').value = settings.bgmVolume;
-    document.getElementById('bgmVolumeValue').textContent = settings.bgmVolume;
-    document.getElementById('seVolume').value = settings.seVolume;
-    document.getElementById('seVolumeValue').textContent = settings.seVolume;
-    document.getElementById('muteBgm').checked = settings.muteBgm;
-    document.getElementById('muteSe').checked = settings.muteSe;
-
-    document.getElementById('settingsPanel').classList.remove('hidden');
-}
-
-function hideSettings() {
-    document.getElementById('settingsPanel').classList.add('hidden');
-    saveSettings();
-}
-
-function updateBgmVolume(e) {
-    settings.bgmVolume = parseInt(e.target.value);
-    document.getElementById('bgmVolumeValue').textContent = settings.bgmVolume;
-
-    if (bgmAudio && !settings.muteBgm) {
-        bgmAudio.volume = settings.bgmVolume / 100;
-    }
-}
-
-function updateSeVolume(e) {
-    settings.seVolume = parseInt(e.target.value);
-    document.getElementById('seVolumeValue').textContent = settings.seVolume;
-}
-
-function toggleMuteBgm(e) {
-    settings.muteBgm = e.target.checked;
-
-    if (bgmAudio) {
-        bgmAudio.volume = settings.muteBgm ? 0 : settings.bgmVolume / 100;
-    }
-}
-
-function toggleMuteSe(e) {
-    settings.muteSe = e.target.checked;
-}
-
-function toggleDebugMode(e) {
-    settings.debugMode = e.target.checked;
-    saveSettings();
-    updateDebugDisplay();
-}
-
-// ========================================
-// セーブ・ロード
-// ========================================
-function saveGame() {
-    const saveData = {
-        sceneId: currentScene.id,
-        textIndex: currentTextIndex,
-        readScenes: Array.from(readScenes),
-        timestamp: new Date().toISOString()
-    };
-
-    localStorage.setItem('soundNovelSave', JSON.stringify(saveData));
-    alert('セーブしました');
-    hideMenu();
-}
-
-function loadGame() {
-    const saveDataStr = localStorage.getItem('soundNovelSave');
-    if (!saveDataStr) {
-        alert('セーブデータがありません');
-        return;
-    }
-
-    try {
-        const saveData = JSON.parse(saveDataStr);
-        readScenes = new Set(saveData.readScenes || []);
-
-        // テキストログをクリア
-        textLog = [];
-        document.getElementById('textArea').innerHTML = '';
-
-        // シーンをロード
-        currentTextIndex = 0;  // 最初から表示
-        loadScene(saveData.sceneId);
-
-        hideMenu();
-        alert('ロードしました');
-    } catch (error) {
-        console.error('Load failed:', error);
-        alert('ロードに失敗しました');
-    }
-}
-
-function restartGame() {
-    if (!confirm('最初からやり直しますか？')) return;
-
-    // すべてのデータをクリア
-    textLog = [];
-    readScenes = new Set();
-    currentTextIndex = 0;
+  // Pause auto/skip
+  if (autoMode) {
     autoMode = false;
+    document.getElementById('autoBtn')?.classList.remove('active');
+  }
+  if (skipMode) {
     skipMode = false;
+    document.getElementById('skipBtn')?.classList.remove('active');
+  }
+
+  const secretButton = document.createElement('button');
+  secretButton.className = 'choice-btn';
+  secretButton.textContent = '真相へ進む';
+  secretButton.addEventListener('click', () => {
+    inTrueEnd = false;
+    isSecretEndPrompt = false;
 
     document.getElementById('textArea').innerHTML = '';
-    document.getElementById('autoBtn').classList.remove('active');
-    document.getElementById('skipBtn').classList.remove('active');
+    hideChoices();
+    loadScene('secret_end_scene');
+  });
+  choicesArea.appendChild(secretButton);
 
-    hideMenu();
-    startGame();
+  const titleButton = document.createElement('button');
+  titleButton.className = 'choice-btn';
+  titleButton.textContent = 'タイトルへ戻る';
+  titleButton.addEventListener('click', () => {
+    inTrueEnd = false;
+    isSecretEndPrompt = false;
+
+    hideChoices();
+    restartGame();
+  });
+  choicesArea.appendChild(titleButton);
 }
 
 // ========================================
-// 設定の保存・読み込み
+// SECRET flags tracking
 // ========================================
-function saveSettings() {
-    localStorage.setItem('soundNovelSettings', JSON.stringify(settings));
-}
-
-function loadSettings() {
-    const settingsStr = localStorage.getItem('soundNovelSettings');
-    if (settingsStr) {
-        try {
-            settings = JSON.parse(settingsStr);
-        } catch (error) {
-            console.error('Failed to load settings:', error);
-        }
-    }
-
-    // デバッグモードのチェックボックス状態を更新
-    const debugCheckbox = document.getElementById('debugMode');
-    if (debugCheckbox) {
-        debugCheckbox.checked = settings.debugMode || false;
-    }
-}
-
-// ========================================
-// デバッグ表示
-// ========================================
-function updateDebugDisplay() {
-    const debugInfo = document.getElementById('debugInfo');
-    if (!debugInfo) return;
-
-    if (settings.debugMode && currentScene) {
-        const flagsStr = `coop:${flags.coop?'✓':'✗'} pinch:${flags.pinch?'✓':'✗'} info:${flags.needMoreInfo?'✓':'✗'} suspect:${flags.suspectMiyuki?'✓':'✗'} noAlt:${flags.didNotGetAlternativeNormal?'✓':'✗'}`;
-        debugInfo.textContent = `DEBUG: scene=${currentScene.id} | ${flagsStr}`;
-        debugInfo.classList.remove('hidden');
-    } else {
-        debugInfo.classList.add('hidden');
-    }
-}
-
-// ========================================
-// プレイヤー名の保存・読み込み
-// ========================================
-function savePlayerName() {
-    localStorage.setItem('soundNovelPlayerName', playerName);
-}
-
-function loadPlayerName() {
-    const savedName = localStorage.getItem('soundNovelPlayerName');
-    if (savedName) {
-        playerName = savedName;
-    }
-}
-
-// ========================================
-// フラグの保存・読み込み
-// ========================================
-function saveFlags() {
-    localStorage.setItem('soundNovelFlags', JSON.stringify(flags));
-}
-
-function loadFlags() {
-    const savedFlags = localStorage.getItem('soundNovelFlags');
-    if (savedFlags) {
-        try {
-            flags = JSON.parse(savedFlags);
-        } catch (error) {
-            console.error('Failed to load flags:', error);
-        }
-    }
-}
-
-function setFlag(flagName, value) {
-    flags[flagName] = value;
-    saveFlags();
-    updateDebugDisplay();
+function trackChoiceFlags(sceneId, nextScene, label) {
+  if (sceneId === 'chapter2_scene5' && nextScene === 'route_a_scene6') {
+    setFlag('coop', true);
+  }
+  if (sceneId === 'route_a_scene7' && nextScene === 'route_a2_continuation') {
+    setFlag('pinch', true);
+  }
+  if (sceneId === 'route_a2_continuation' && label && label.includes('まだ判断できない')) {
+    setFlag('needMoreInfo', true);
+  }
+  if (sceneId === 'chapter3_scene8' && nextScene === 'route_b_scene1') {
+    setFlag('suspectMiyuki', true);
+  }
+  if (nextScene === 'chapter3_scene9_alternative') {
+    setFlag('didNotGetAlternativeNormal', false);
+  }
 }
 
 function checkSecretEndConditions() {
-    return flags.coop &&
-           flags.pinch &&
-           flags.needMoreInfo &&
-           flags.suspectMiyuki &&
-           flags.didNotGetAlternativeNormal;
+  return flags.coop &&
+    flags.pinch &&
+    flags.needMoreInfo &&
+    flags.suspectMiyuki &&
+    flags.didNotGetAlternativeNormal;
 }
 
-function showNameInputPanel() {
-    const panel = document.getElementById('nameInputPanel');
-    const input = document.getElementById('playerNameInput');
-    input.value = playerName;
-    panel.classList.remove('hidden');
+// ========================================
+// Effects
+// ========================================
+function executeEffect(effect) {
+  const stage = document.querySelector('.stage');
+  const flash = document.getElementById('flash');
+  const noise = document.getElementById('noise');
+
+  switch (effect) {
+    case 'flash':
+      flash?.classList.add('flash');
+      setTimeout(() => flash?.classList.remove('flash'), 400);
+      break;
+    case 'shake':
+      stage?.classList.add('shake');
+      setTimeout(() => stage?.classList.remove('shake'), 400);
+      break;
+    case 'noise':
+      noise?.classList.add('noise');
+      setTimeout(() => noise?.classList.remove('noise'), 1400);
+      break;
+  }
 }
 
-function hideNameInputPanel() {
-    document.getElementById('nameInputPanel').classList.add('hidden');
+// ========================================
+// Audio (WebAudio generated)
+// ========================================
+function initAudioContext() {
+  if (audioContext) return;
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  audioContext = new AudioContextClass();
+
+  bgmGainNode = audioContext.createGain();
+  seGainNode = audioContext.createGain();
+
+  bgmGainNode.gain.value = settings.muteBgm ? 0 : settings.bgmVolume / 100;
+  seGainNode.gain.value = settings.muteSe ? 0 : settings.seVolume / 100;
+
+  bgmGainNode.connect(audioContext.destination);
+  seGainNode.connect(audioContext.destination);
 }
 
-function confirmPlayerName() {
-    const input = document.getElementById('playerNameInput');
-    const name = input.value.trim();
-
-    if (!name) {
-        alert('名前を入力してください');
-        return;
-    }
-
-    if (name.length > 8) {
-        alert('名前は8文字以内で入力してください');
-        return;
-    }
-
-    playerName = name;
-    savePlayerName();
-    hideNameInputPanel();
-
-    // ゲームコンテナを表示してゲーム開始
-    if (document.getElementById('gameContainer').classList.contains('hidden')) {
-        document.getElementById('gameContainer').classList.remove('hidden');
-        startGame();
-    }
+function stopWebAudioNodes(nodes) {
+  nodes.forEach(node => {
+    try { node.stop(); } catch (_) {}
+    try { node.disconnect?.(); } catch (_) {}
+  });
 }
 
-function showNameInput() {
+function stopBgmOnly() {
+  stopWebAudioNodes(bgmNodes);
+  bgmNodes = [];
+  currentBgm = null;
+}
+
+function stopAllAudio() {
+  stopBgmOnly();
+  stopWebAudioNodes(seNodes);
+  seNodes = [];
+}
+
+function playBgm(bgmId) {
+  if (SOUND_DISABLED) return;
+  if (!audioEnabled) return;
+
+  if (bgmId === currentBgm) return;
+  currentBgm = bgmId;
+
+  initAudioContext();
+  if (!audioContext || !bgmGainNode) return;
+
+  stopBgmOnly();
+
+  const nodes = createBgmNodes(bgmId);
+  if (!nodes.length) return;
+
+  bgmNodes = nodes;
+  bgmNodes.forEach(node => node.start());
+}
+
+function playSe(seId) {
+  if (SOUND_DISABLED) return;
+  if (!audioEnabled) return;
+  if (settings.muteSe) return;
+  if (!seId || !storyData?.se?.[seId]) return;
+
+  initAudioContext();
+  if (!audioContext || !seGainNode) return;
+
+  const nodes = createSeNodes(seId);
+  if (!nodes.length) return;
+
+  nodes.forEach(node => {
+    const startTime = node.startAt ?? audioContext.currentTime;
+    const stopTime = node.stopAt ?? (audioContext.currentTime + (node.duration ?? 0.3));
+    node.start(startTime);
+    try { node.stop(stopTime); } catch (_) {}
+  });
+
+  seNodes.push(...nodes);
+}
+
+function createNoiseBuffer(durationSeconds = 2, level = 0.25) {
+  const sampleRate = audioContext.sampleRate;
+  const buffer = audioContext.createBuffer(1, Math.floor(durationSeconds * sampleRate), sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * level;
+  return buffer;
+}
+
+function createBgmNodes(bgmId) {
+  switch (bgmId) {
+    case 'wind':
+      return [createWindBgmNode(0.045)];
+    case 'tense':
+    case 'silence':
+      return createDroneNodes(110, 0.028);
+    case 'mysterious':
+      return createDroneNodes(90, 0.034);
+    case 'sad':
+      return createDroneNodes(70, 0.026);
+    default:
+      return createDroneNodes(80, 0.028);
+  }
+}
+
+function createSeNodes(seId) {
+  switch (seId) {
+    case 'wiper': return [createSwipeSeNode()];
+    case 'gust': return [createGustSeNode()];
+    case 'door_close': return [createKnockSeNode()];
+    case 'footsteps_snow': return [createFootstepsSeNode()];
+    case 'scream': return [createScreamSeNode()];
+    case 'heartbeat': return createHeartbeatSeNodes();
+    case 'struggle': return [createStruggleSeNode()];
+    default: return [];
+  }
+}
+
+function createWindBgmNode(volume = 0.05) {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(4, 0.22);
+  source.loop = true;
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 380;
+  filter.Q.value = 0.7;
+
+  const gain = audioContext.createGain();
+  gain.gain.value = volume;
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(bgmGainNode);
+
+  source.duration = 0;
+  return source;
+}
+
+function createDroneNodes(frequency, volume) {
+  const osc = audioContext.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = frequency;
+
+  const lfo = audioContext.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.12;
+
+  const lfoGain = audioContext.createGain();
+  lfoGain.gain.value = 2.2;
+
+  const gain = audioContext.createGain();
+  gain.gain.value = volume;
+
+  lfo.connect(lfoGain);
+  lfoGain.connect(osc.frequency);
+
+  osc.connect(gain);
+  gain.connect(bgmGainNode);
+
+  osc.duration = 0;
+  lfo.duration = 0;
+
+  return [osc, lfo];
+}
+
+function createSwipeSeNode() {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(0.18, 0.20);
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 280;
+  filter.Q.value = 0.9;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.10, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.18);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(seGainNode);
+
+  source.duration = 0.18;
+  return source;
+}
+
+function createGustSeNode() {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(0.55, 0.25);
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 520;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0008, audioContext.currentTime + 0.55);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(seGainNode);
+
+  source.duration = 0.55;
+  return source;
+}
+
+function createKnockSeNode() {
+  const osc = audioContext.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.value = 130;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0008, audioContext.currentTime + 0.22);
+
+  osc.connect(gain);
+  gain.connect(seGainNode);
+
+  osc.duration = 0.22;
+  return osc;
+}
+
+function createFootstepsSeNode() {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(0.26, 0.20);
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 320;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.09, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0008, audioContext.currentTime + 0.26);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(seGainNode);
+
+  source.duration = 0.26;
+  return source;
+}
+
+function createScreamSeNode() {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(0.32, 0.22);
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 650; // lower to avoid piercing highs
+  filter.Q.value = 0.7;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0008, audioContext.currentTime + 0.32);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(seGainNode);
+
+  source.duration = 0.32;
+  return source;
+}
+
+function createHeartbeatSeNodes() {
+  const nodes = [];
+  const baseTime = audioContext.currentTime;
+
+  [0, 0.24].forEach(offset => {
+    const osc = audioContext.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 78;
+
+    const gain = audioContext.createGain();
+    gain.gain.setValueAtTime(0.11, baseTime + offset);
+    gain.gain.exponentialRampToValueAtTime(0.0008, baseTime + offset + 0.18);
+
+    osc.connect(gain);
+    gain.connect(seGainNode);
+
+    osc.duration = 0.22;
+    osc.startAt = baseTime + offset;
+    osc.stopAt = baseTime + offset + 0.22;
+
+    nodes.push(osc);
+  });
+
+  return nodes;
+}
+
+function createStruggleSeNode() {
+  const source = audioContext.createBufferSource();
+  source.buffer = createNoiseBuffer(0.30, 0.22);
+
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 420;
+
+  const gain = audioContext.createGain();
+  gain.gain.setValueAtTime(0.11, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0008, audioContext.currentTime + 0.30);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(seGainNode);
+
+  source.duration = 0.30;
+  return source;
+}
+
+// ========================================
+// Menu / Settings / Log / Save-Load / Debug
+// ========================================
+function showMenu() { document.getElementById('menuPanel')?.classList.remove('hidden'); }
+function hideMenu() { document.getElementById('menuPanel')?.classList.add('hidden'); }
+
+function showSettings() {
+  document.getElementById('bgmVolume').value = settings.bgmVolume;
+  document.getElementById('bgmVolumeValue').textContent = settings.bgmVolume;
+  document.getElementById('seVolume').value = settings.seVolume;
+  document.getElementById('seVolumeValue').textContent = settings.seVolume;
+  document.getElementById('muteBgm').checked = settings.muteBgm;
+  document.getElementById('muteSe').checked = settings.muteSe;
+  document.getElementById('debugMode').checked = !!settings.debugMode;
+  document.getElementById('settingsPanel')?.classList.remove('hidden');
+}
+function hideSettings() {
+  document.getElementById('settingsPanel')?.classList.add('hidden');
+  saveSettings();
+}
+
+function updateBgmVolume(e) {
+  settings.bgmVolume = parseInt(e.target.value, 10);
+  document.getElementById('bgmVolumeValue').textContent = settings.bgmVolume;
+  if (bgmGainNode && !settings.muteBgm) bgmGainNode.gain.value = settings.bgmVolume / 100;
+}
+function updateSeVolume(e) {
+  settings.seVolume = parseInt(e.target.value, 10);
+  document.getElementById('seVolumeValue').textContent = settings.seVolume;
+  if (seGainNode && !settings.muteSe) seGainNode.gain.value = settings.seVolume / 100;
+}
+function toggleMuteBgm(e) {
+  settings.muteBgm = !!e.target.checked;
+  if (bgmGainNode) bgmGainNode.gain.value = settings.muteBgm ? 0 : settings.bgmVolume / 100;
+}
+function toggleMuteSe(e) {
+  settings.muteSe = !!e.target.checked;
+  if (seGainNode) seGainNode.gain.value = settings.muteSe ? 0 : settings.seVolume / 100;
+}
+function toggleDebugMode(e) {
+  settings.debugMode = !!e.target.checked;
+  saveSettings();
+  updateDebugDisplay();
+}
+
+function saveSettings() { localStorage.setItem('soundNovelSettings', JSON.stringify(settings)); }
+function loadSettings() {
+  const s = localStorage.getItem('soundNovelSettings');
+  if (s) { try { settings = JSON.parse(s); } catch (_) {} }
+}
+
+function addToLog(textData) {
+  textLog.push({ type: textData.type || 'narration', text: textData.text || '' });
+}
+
+function showLog() {
+  const logContent = document.getElementById('logContent');
+  if (!logContent) return;
+
+  logContent.innerHTML = '';
+  textLog.forEach(entry => {
+    const entryDiv = document.createElement('div');
+    entryDiv.className = `log-entry text-${entry.type}`;
+    entryDiv.textContent = entry.text;
+    logContent.appendChild(entryDiv);
+  });
+
+  document.getElementById('logPanel')?.classList.remove('hidden');
+  logContent.scrollTop = logContent.scrollHeight;
+}
+function hideLog() { document.getElementById('logPanel')?.classList.add('hidden'); }
+
+function saveGame() {
+  const saveData = {
+    sceneId: currentScene?.id,
+    textIndex: currentTextIndex,
+    readScenes: Array.from(readScenes),
+    timestamp: new Date().toISOString()
+  };
+  localStorage.setItem('soundNovelSave', JSON.stringify(saveData));
+  alert('セーブしました');
+  hideMenu();
+}
+
+function loadGame() {
+  const s = localStorage.getItem('soundNovelSave');
+  if (!s) return alert('セーブデータがありません');
+
+  try {
+    const saveData = JSON.parse(s);
+    readScenes = new Set(saveData.readScenes || []);
+
+    textLog = [];
+    document.getElementById('textArea').innerHTML = '';
+
+    currentTextIndex = 0;
     hideMenu();
-    showNameInputPanel();
+    loadScene(saveData.sceneId);
+    alert('ロードしました');
+  } catch (e) {
+    console.error('Load failed:', e);
+    alert('ロードに失敗しました');
+  }
 }
 
-// テキストの置換処理
-function replacePlayerName(text) {
-    if (!text) return text;
-    return text.replace(/主人公名/g, playerName);
+function restartGame() {
+  if (!confirm('最初からやり直しますか？')) return;
+
+  stopAllAudio();
+
+  textLog = [];
+  readScenes = new Set();
+  currentTextIndex = 0;
+  autoMode = false;
+  skipMode = false;
+
+  document.getElementById('textArea').innerHTML = '';
+  document.getElementById('autoBtn')?.classList.remove('active');
+  document.getElementById('skipBtn')?.classList.remove('active');
+
+  hideMenu();
+  startGame();
+}
+
+function toggleAuto() {
+  autoMode = !autoMode;
+  document.getElementById('autoBtn')?.classList.toggle('active', autoMode);
+
+  if (autoMode) {
+    skipMode = false;
+    document.getElementById('skipBtn')?.classList.remove('active');
+    if (!isTyping) setTimeout(() => autoMode && showNextText(), 1200);
+  }
+}
+function toggleSkip() {
+  skipMode = !skipMode;
+  document.getElementById('skipBtn')?.classList.toggle('active', skipMode);
+
+  if (skipMode) {
+    autoMode = false;
+    document.getElementById('autoBtn')?.classList.remove('active');
+    if (!isTyping && readScenes.has(currentScene.id)) {
+      setTimeout(() => skipMode && showNextText(), 80);
+    }
+  }
+}
+
+function updateDebugDisplay() {
+  const debugInfo = document.getElementById('debugInfo');
+  if (!debugInfo) return;
+
+  if (settings.debugMode && currentScene) {
+    const flagsStr = `coop:${flags.coop?'✓':'✗'} pinch:${flags.pinch?'✓':'✗'} info:${flags.needMoreInfo?'✓':'✗'} suspect:${flags.suspectMiyuki?'✓':'✗'} noAlt:${flags.didNotGetAlternativeNormal?'✓':'✗'}`;
+    debugInfo.textContent = `DEBUG: scene=${currentScene.id} | ${flagsStr}`;
+    debugInfo.classList.remove('hidden');
+  } else {
+    debugInfo.classList.add('hidden');
+  }
+}
+
+// Player name
+function savePlayerName() { localStorage.setItem('soundNovelPlayerName', playerName); }
+function loadPlayerName() {
+  const savedName = localStorage.getItem('soundNovelPlayerName');
+  if (savedName) playerName = savedName;
+}
+function showNameInputPanel() {
+  const panel = document.getElementById('nameInputPanel');
+  const input = document.getElementById('playerNameInput');
+  if (!panel || !input) return;
+  input.value = playerName;
+  panel.classList.remove('hidden');
+}
+function hideNameInputPanel() { document.getElementById('nameInputPanel')?.classList.add('hidden'); }
+function confirmPlayerName() {
+  const input = document.getElementById('playerNameInput');
+  const name = (input?.value || '').trim();
+
+  if (!name) return alert('名前を入力してください');
+  if (name.length > 8) return alert('名前は8文字以内で入力してください');
+
+  playerName = name;
+  savePlayerName();
+  hideNameInputPanel();
+
+  const container = document.getElementById('gameContainer');
+  if (container?.classList.contains('hidden')) {
+    container.classList.remove('hidden');
+    startGame();
+  }
+}
+function showNameInput() { hideMenu(); showNameInputPanel(); }
+function replacePlayerName(text) { return (text || '').replace(/主人公名/g, playerName); }
+
+// Flags persistence
+function saveFlags() { localStorage.setItem('soundNovelFlags', JSON.stringify(flags)); }
+function loadFlags() {
+  const savedFlags = localStorage.getItem('soundNovelFlags');
+  if (savedFlags) { try { flags = JSON.parse(savedFlags); } catch (_) {} }
+}
+function setFlag(flagName, value) {
+  flags[flagName] = value;
+  saveFlags();
+  updateDebugDisplay();
+}
+function checkSecretEndConditions() {
+  return flags.coop &&
+    flags.pinch &&
+    flags.needMoreInfo &&
+    flags.suspectMiyuki &&
+    flags.didNotGetAlternativeNormal;
 }

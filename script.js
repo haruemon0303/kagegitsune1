@@ -8,6 +8,11 @@ let isTyping = false;
 let autoMode = false;
 let skipMode = false;
 let audioEnabled = false;
+let inTrueEnd = false;
+let isSecretEndPrompt = false;
+let isSecretEndPromptQueued = false;
+const TRUE_END_MARKER = '【TRUE END';
+const END_MARKER = '【END】';
 
 // BGM/SE管理
 let bgmAudio = null;
@@ -279,15 +284,23 @@ function displayText(textData) {
             clearInterval(typeInterval);
             isTyping = false;
 
-            // SECRET END条件チェック（ENDテキスト表示時）
-            if (textData.type === 'system' && text.includes('END')) {
-                if (checkSecretEndConditions()) {
-                    // すべての条件を満たしていればSECRET ENDへ遷移
-                    setTimeout(() => {
-                        document.getElementById('textArea').innerHTML = '';
-                        loadScene('secret_end_scene');
-                    }, 2000);
-                    return;
+            if (textData.type === 'system') {
+                if (text.includes(TRUE_END_MARKER)) {
+                    inTrueEnd = true;
+                }
+
+                if (text.includes(END_MARKER)) {
+                    if (inTrueEnd && checkSecretEndConditions()) {
+                        if (!isSecretEndPrompt && !isSecretEndPromptQueued) {
+                            isSecretEndPromptQueued = true;
+                            setTimeout(() => {
+                                showSecretEndPrompt();
+                            }, 800);
+                        }
+                        return;
+                    }
+
+                    inTrueEnd = false;
                 }
             }
 
@@ -320,6 +333,10 @@ function handleTextAreaClick() {
         return;
     }
 
+    if (isChoicesVisible()) {
+        return;
+    }
+
     // 次のテキストへ
     showNextText();
 }
@@ -331,6 +348,8 @@ function showChoices() {
     const choicesArea = document.getElementById('choicesArea');
     choicesArea.innerHTML = '';
     choicesArea.classList.remove('hidden');
+    isSecretEndPrompt = false;
+    isSecretEndPromptQueued = false;
 
     currentScene.choices.forEach((choice, index) => {
         const button = document.createElement('button');
@@ -346,6 +365,8 @@ function hideChoices() {
     const choicesArea = document.getElementById('choicesArea');
     choicesArea.classList.add('hidden');
     choicesArea.innerHTML = '';
+    isSecretEndPrompt = false;
+    isSecretEndPromptQueued = false;
 }
 
 function selectChoice(choice) {
@@ -361,6 +382,49 @@ function selectChoice(choice) {
     if (choice.nextScene) {
         loadScene(choice.nextScene);
     }
+}
+
+function isChoicesVisible() {
+    return !document.getElementById('choicesArea').classList.contains('hidden');
+}
+
+function showSecretEndPrompt() {
+    const choicesArea = document.getElementById('choicesArea');
+    choicesArea.innerHTML = '';
+    choicesArea.classList.remove('hidden');
+    isSecretEndPrompt = true;
+    isSecretEndPromptQueued = false;
+
+    if (autoMode) {
+        autoMode = false;
+        document.getElementById('autoBtn').classList.remove('active');
+    }
+
+    if (skipMode) {
+        skipMode = false;
+        document.getElementById('skipBtn').classList.remove('active');
+    }
+
+    const secretButton = document.createElement('button');
+    secretButton.className = 'choice-btn';
+    secretButton.textContent = '真相へ進む';
+    secretButton.addEventListener('click', () => {
+        inTrueEnd = false;
+        document.getElementById('textArea').innerHTML = '';
+        hideChoices();
+        loadScene('secret_end_scene');
+    });
+    choicesArea.appendChild(secretButton);
+
+    const titleButton = document.createElement('button');
+    titleButton.className = 'choice-btn';
+    titleButton.textContent = 'タイトルへ戻る';
+    titleButton.addEventListener('click', () => {
+        inTrueEnd = false;
+        hideChoices();
+        restartGame();
+    });
+    choicesArea.appendChild(titleButton);
 }
 
 // ========================================

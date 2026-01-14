@@ -131,6 +131,12 @@ git push origin main
 
 数分後、`https://[ユーザー名].github.io/[リポジトリ名]/` でアクセス可能になります。
 
+### story.json をPages上で確認する手順
+
+1. ブラウザで `https://[ユーザー名].github.io/[リポジトリ名]/story.json` を開く
+2. JSONが表示されれば、Pages上の`story.json`が反映済みです
+3. 変更後に反映されない場合は、ブラウザのキャッシュを更新してください
+
 ### 3. カスタムドメインの設定（オプション）
 
 独自ドメインを使用する場合は、GitHub Pages設定の **Custom domain** で設定できます。

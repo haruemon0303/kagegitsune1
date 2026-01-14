@@ -16,6 +16,7 @@ const SOUND_DISABLED = false;
 let inTrueEnd = false;
 let isSecretEndPrompt = false;
 let isSecretEndPromptQueued = false;
+const SOUND_DISABLED = true;
 const TRUE_END_MARKER = '【TRUE END';
 const END_MARKER = '【END】';
 
@@ -1009,4 +1010,19 @@ function checkSecretEndConditions() {
     flags.needMoreInfo &&
     flags.suspectMiyuki &&
     flags.didNotGetAlternativeNormal;
+}
+
+function stopAllAudio() {
+    if (bgmAudio) {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+        bgmAudio = null;
+    }
+
+    currentBgm = null;
+
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
 }

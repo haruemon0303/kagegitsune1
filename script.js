@@ -68,7 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ========================================
 async function loadStoryData() {
     try {
-        const response = await fetch('story.json');
+        const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+        const storyUrl = new URL(`${basePath}story.json`, window.location.origin);
+        const response = await fetch(storyUrl.toString());
         storyData = await response.json();
         console.log('Story data loaded:', storyData);
     } catch (error) {

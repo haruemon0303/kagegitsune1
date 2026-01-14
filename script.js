@@ -11,6 +11,7 @@ let audioEnabled = false;
 let inTrueEnd = false;
 let isSecretEndPrompt = false;
 let isSecretEndPromptQueued = false;
+const SOUND_DISABLED = true;
 const TRUE_END_MARKER = '【TRUE END';
 const END_MARKER = '【END】';
 
@@ -124,6 +125,7 @@ function showTapOverlay() {
     const overlay = document.getElementById('tapToStart');
     overlay.addEventListener('click', () => {
         overlay.classList.add('hidden');
+        stopAllAudio();
         enableAudio();
 
         // プレイヤー名をロード
@@ -141,9 +143,6 @@ function showTapOverlay() {
 
 function enableAudio() {
     audioEnabled = true;
-    // iOS対策：ユーザー操作後に音声を有効化
-    const dummyAudio = new Audio();
-    dummyAudio.play().catch(() => {});
 }
 
 // ========================================
@@ -163,6 +162,7 @@ function startGame() {
 // シーンのロード
 // ========================================
 function loadScene(sceneId) {
+    stopAllAudio();
     const scene = storyData.scenes[sceneId];
     if (!scene) {
         console.error('Scene not found:', sceneId);
@@ -487,6 +487,7 @@ function executeEffect(effect) {
 // BGM管理
 // ========================================
 function playBgm(bgmId) {
+    if (SOUND_DISABLED) return;
     if (bgmId === currentBgm) return;
 
     // 既存のBGMを停止
@@ -508,6 +509,7 @@ function playBgm(bgmId) {
 }
 
 function playSe(seId) {
+    if (SOUND_DISABLED) return;
     if (!seId || !storyData.se[seId]) return;
     if (settings.muteSe) return;
 
@@ -697,6 +699,8 @@ function loadGame() {
 function restartGame() {
     if (!confirm('最初からやり直しますか？')) return;
 
+    stopAllAudio();
+
     // すべてのデータをクリア
     textLog = [];
     readScenes = new Set();
@@ -843,4 +847,19 @@ function showNameInput() {
 function replacePlayerName(text) {
     if (!text) return text;
     return text.replace(/主人公名/g, playerName);
+}
+
+function stopAllAudio() {
+    if (bgmAudio) {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+        bgmAudio = null;
+    }
+
+    currentBgm = null;
+
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
 }

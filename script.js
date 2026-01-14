@@ -20,6 +20,15 @@ let readScenes = new Set();
 // プレイヤー名
 let playerName = '主人公';
 
+// フラグ管理（SECRET END条件）
+let flags = {
+    coop: false,
+    pinch: false,
+    needMoreInfo: false,
+    suspectMiyuki: false,
+    didNotGetAlternativeNormal: true
+};
+
 // 設定
 let settings = {
     bgmVolume: 70,
@@ -35,6 +44,9 @@ let settings = {
 document.addEventListener('DOMContentLoaded', async () => {
     // 設定をロード
     loadSettings();
+
+    // フラグをロード
+    loadFlags();
 
     // ストーリーデータをロード
     await loadStoryData();
@@ -267,6 +279,18 @@ function displayText(textData) {
             clearInterval(typeInterval);
             isTyping = false;
 
+            // SECRET END条件チェック（ENDテキスト表示時）
+            if (textData.type === 'system' && text.includes('END')) {
+                if (checkSecretEndConditions()) {
+                    // すべての条件を満たしていればSECRET ENDへ遷移
+                    setTimeout(() => {
+                        document.getElementById('textArea').innerHTML = '';
+                        loadScene('secret_end_scene');
+                    }, 2000);
+                    return;
+                }
+            }
+
             // オートモード時は自動で次へ
             if (autoMode) {
                 setTimeout(() => {
@@ -327,12 +351,45 @@ function hideChoices() {
 function selectChoice(choice) {
     hideChoices();
 
+    // フラグ管理（SECRET END条件）
+    trackChoiceFlags(currentScene.id, choice.nextScene, choice.label);
+
     // テキストエリアをクリア
     document.getElementById('textArea').innerHTML = '';
 
     // 次のシーンへ
     if (choice.nextScene) {
         loadScene(choice.nextScene);
+    }
+}
+
+// ========================================
+// フラグ追跡（SECRET END条件）
+// ========================================
+function trackChoiceFlags(sceneId, nextScene, label) {
+    // chapter2_scene5で「もちろんだ、一緒に調べよう」を選択
+    if (sceneId === 'chapter2_scene5' && nextScene === 'route_a_scene6') {
+        setFlag('coop', true);
+    }
+
+    // route_a_scene7で「挟み撃ち」を選択
+    if (sceneId === 'route_a_scene7' && nextScene === 'route_a2_continuation') {
+        setFlag('pinch', true);
+    }
+
+    // route_a2_continuationで「まだ判断できない、もっと情報が必要だ」を選択
+    if (sceneId === 'route_a2_continuation' && label && label.includes('まだ判断できない')) {
+        setFlag('needMoreInfo', true);
+    }
+
+    // chapter3_scene8で「あなた、何か隠していませんか？」を選択
+    if (sceneId === 'chapter3_scene8' && nextScene === 'route_b_scene1') {
+        setFlag('suspectMiyuki', true);
+    }
+
+    // chapter3_scene9_alternativeに入ったらフラグをfalseに
+    if (nextScene === 'chapter3_scene9_alternative') {
+        setFlag('didNotGetAlternativeNormal', false);
     }
 }
 
@@ -621,7 +678,8 @@ function updateDebugDisplay() {
     if (!debugInfo) return;
 
     if (settings.debugMode && currentScene) {
-        debugInfo.textContent = `DEBUG: scene=${currentScene.id}`;
+        const flagsStr = `coop:${flags.coop?'✓':'✗'} pinch:${flags.pinch?'✓':'✗'} info:${flags.needMoreInfo?'✓':'✗'} suspect:${flags.suspectMiyuki?'✓':'✗'} noAlt:${flags.didNotGetAlternativeNormal?'✓':'✗'}`;
+        debugInfo.textContent = `DEBUG: scene=${currentScene.id} | ${flagsStr}`;
         debugInfo.classList.remove('hidden');
     } else {
         debugInfo.classList.add('hidden');
@@ -640,6 +698,38 @@ function loadPlayerName() {
     if (savedName) {
         playerName = savedName;
     }
+}
+
+// ========================================
+// フラグの保存・読み込み
+// ========================================
+function saveFlags() {
+    localStorage.setItem('soundNovelFlags', JSON.stringify(flags));
+}
+
+function loadFlags() {
+    const savedFlags = localStorage.getItem('soundNovelFlags');
+    if (savedFlags) {
+        try {
+            flags = JSON.parse(savedFlags);
+        } catch (error) {
+            console.error('Failed to load flags:', error);
+        }
+    }
+}
+
+function setFlag(flagName, value) {
+    flags[flagName] = value;
+    saveFlags();
+    updateDebugDisplay();
+}
+
+function checkSecretEndConditions() {
+    return flags.coop &&
+           flags.pinch &&
+           flags.needMoreInfo &&
+           flags.suspectMiyuki &&
+           flags.didNotGetAlternativeNormal;
 }
 
 function showNameInputPanel() {

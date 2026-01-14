@@ -2375,6 +2375,139 @@
           "text": "【END】"
         }
       ]
+    },
+    "secret_end_scene": {
+      "background": "dark_room",
+      "bgm": "tense",
+      "text": [
+        {
+          "type": "system",
+          "text": "【真相解明】"
+        },
+        {
+          "type": "narration",
+          "text": "すべてのピースが繋がった瞬間、私は真実に気づいた。"
+        },
+        {
+          "type": "narration",
+          "text": "カゲギツネ――それは、神崎玲子だったのだ。"
+        },
+        {
+          "type": "system",
+          "text": "[SE: 衝撃音]",
+          "se": "heartbeat",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "女医である彼女は、二十年前の事件の真の黒幕だった。"
+        },
+        {
+          "type": "narration",
+          "text": "氷室館の主人を殺害したのは鷹野誠一ではなく、神崎玲子。"
+        },
+        {
+          "type": "narration",
+          "text": "誠一は彼女に脅迫され、罪を被らされていたのだ。"
+        },
+        {
+          "type": "narration",
+          "text": "そして今回の事件――美雪が誠一を殺害したのは、彼女の仕組んだ罠だった。"
+        },
+        {
+          "type": "narration",
+          "text": "神崎は美雪に真実を告げず、誠一が犯人だと信じ込ませたのだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「神崎さん。あなたが、カゲギツネだったんですね」"
+        },
+        {
+          "type": "narration",
+          "text": "私が静かに言うと、神崎玲子は冷たく笑った。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「よく、気づいたわね」"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「でも、証拠はないでしょう？」"
+        },
+        {
+          "type": "narration",
+          "text": "彼女の目には、狡猾な光が宿っていた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「いや、ある」"
+        },
+        {
+          "type": "narration",
+          "text": "山岡が、手にした証拠品を掲げた。"
+        },
+        {
+          "type": "dialogue",
+          "text": "山岡「二十年前のカルテ。あなたが氷室館の主人に毒を処方した記録だ」"
+        },
+        {
+          "type": "narration",
+          "text": "神崎の顔が、初めて歪んだ。"
+        },
+        {
+          "type": "dialogue",
+          "text": "神崎「……なぜ、そこまで」"
+        },
+        {
+          "type": "dialogue",
+          "text": "主人公名「真実は、必ず明らかになる」"
+        },
+        {
+          "type": "narration",
+          "text": "その後、警察が到着し、神崎玲子は逮捕された。"
+        },
+        {
+          "type": "narration",
+          "text": "美雪は無実が証明され、釈放された。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、彼女の心の傷は深く、簡単には癒えないだろう。"
+        },
+        {
+          "type": "narration",
+          "text": "氷室館の事件は、こうして真の結末を迎えた。"
+        },
+        {
+          "type": "narration",
+          "text": "かげぎつねの正体は、最も冷静を装っていた者だった。"
+        },
+        {
+          "type": "system",
+          "text": "【SECRET END　かげぎつねの正体】",
+          "effect": "flash"
+        },
+        {
+          "type": "narration",
+          "text": "すべての謎を解き明かした私たちは、真実の重さを知った。"
+        },
+        {
+          "type": "narration",
+          "text": "だが、正義は必ず勝つ。"
+        },
+        {
+          "type": "narration",
+          "text": "それが、私たちが学んだ教訓だった。"
+        },
+        {
+          "type": "system",
+          "text": "【END】"
+        },
+        {
+          "type": "system",
+          "text": "―すべての条件を満たし、真のエンディングに到達しました―"
+        }
+      ]
     }
   }
 }

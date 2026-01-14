@@ -16,7 +16,6 @@ const SOUND_DISABLED = false;
 let inTrueEnd = false;
 let isSecretEndPrompt = false;
 let isSecretEndPromptQueued = false;
-const SOUND_DISABLED = true;
 const TRUE_END_MARKER = '【TRUE END';
 const END_MARKER = '【END】';
 
